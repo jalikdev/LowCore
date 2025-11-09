@@ -1,0 +1,44 @@
+name: LowCore
+version: '1.1'
+main: org.jalikdev.lowCore.LowCore
+api-version: '1.21'
+author: 'jan'
+
+commands:
+  lowcore:
+    description: Main command for LowCore
+    usage: /lowcore
+  fly:
+    description: Toggles flight
+    usage: /fly
+  gm:
+    description: Changes gamemode
+    usage: /gm
+  ec:
+    description: Open your ender chest or another player's
+    usage: /ec [player]
+  invsee:
+    description: View another player's inventory
+    usage: /invsee <player>
+  hat:
+    description: Put the item in your hand on your head
+    usage: /hat [player]
+
+permissions:
+  lowcore.hat:
+    description: Use /hat on yourself
+    default: true
+  lowcore.hat.others:
+    description: Use /hat on other players
+    default: op
+
+  lowcore.invsee:
+    description: View other players' inventories
+    default: op
+
+  lowcore.ec:
+    description: Open own ender chest
+    default: op
+  lowcore.ec.others:
+    description: Open others' ender chests
+    default: op

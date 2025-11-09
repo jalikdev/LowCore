@@ -1,0 +1,35 @@
+package org.jalikdev.lowCore.commands;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jalikdev.lowCore.LowCore;
+
+public class FlyCommand implements CommandExecutor {
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+
+        if (!(sender instanceof Player)) {
+            LowCore.sendMessage(sender, "This command can only be used in-game!");
+            return true;
+        }
+
+        Player player = (Player) sender;
+
+        if (!player.hasPermission("lowcore.fly")) {
+            LowCore.sendMessage(player, "§cYou don't have permission!");
+            return true;
+        }
+
+        boolean enabled = !player.getAllowFlight();
+        player.setAllowFlight(enabled);
+
+        String color = enabled ? "§a" : "§c";
+        String status = enabled ? "enabled" : "disabled";
+
+        LowCore.sendMessage(player, "Fly mode: " + color + status + "§7!");
+        return true;
+    }
+}
