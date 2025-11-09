@@ -7,6 +7,10 @@
 
 ---
 
+## ❗ Still in Development ❗
+
+---
+
 ## ✨ Features
 
 ✅ **/gm** – Change your or another player's gamemode easily  
