@@ -1,5 +1,9 @@
 <h1 align="center">💡 LowCore</h1>
 
+---
+
+<h2 align="center">❗ Still in development ❗</h2>
+
 <p align="center">
   <b>A lightweight and modular Minecraft plugin by <a href="https://github.com/jalikdev">jalikdev</a></b><br>
   Designed for modern Paper/Spigot servers.
@@ -42,7 +46,7 @@
 
 ## 🧱 Tech Stack
 
-- ☕ **Java 17+**
+- ☕ **Java 24**
 - 🔧 **Spigot / Paper API**
 - 🧩 **Maven project**
 - 💻 Developed with IntelliJ IDEA
