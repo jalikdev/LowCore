@@ -1,0 +1,56 @@
+# ╔══════════════════════════════════════════════════╗
+# ║                LowCore Config                    ║
+# ╚══════════════════════════════════════════════════╝
+#  ⚙️  GENERAL INFORMATION
+#  ──────────────────────────────────────────────────────────────────
+#  This file controls all plugin messages, prefixes, and features.
+#  Changes require either:
+#     - /lowcore reload   (reloads the config)
+#     - or a server restart
+#
+#  🎨  COLOR CODES
+#  ──────────────────────────────────────────────────────────────────
+#  You can use the following Minecraft color codes in all messages:
+#     &0  Black            &8  Dark Gray
+#     &1  Dark Blue        &9  Blue
+#     &2  Dark Green       &a  Light Green
+#     &3  Aqua             &b  Light Aqua
+#     &4  Dark Red         &c  Red
+#     &5  Purple           &d  Pink / Magenta
+#     &6  Gold             &e  Yellow
+#     &7  Gray             &f  White
+#
+#  Formatting codes:
+#     &l  Bold             &n  Underlined
+#     &o  Italic           &m  Strikethrough
+#     &r  Reset (clears formatting)
+#
+#  🧩  PLACEHOLDERS
+#  ──────────────────────────────────────────────────────────────────
+#  You can use placeholders in messages that will be replaced automatically:
+#     %player%   → the player who executed the command
+#     %target%   → the target player (e.g. in /invsee)
+#
+# ╔════════════════════════════════════════════════════════════╗
+# ║                         SETTINGS                           ║
+# ╚════════════════════════════════════════════════════════════╝
+
+# Command Output prefix
+prefix: "&8[&aLowCore&8] &7" # leave a Space at the end
+
+# General settings
+features:
+
+# General config messages
+messages:
+  reload: "&aLowCore config reloaded!"
+  no-permission: "&cYou do not have permission!"
+  player-only: "&cOnly players can use this command!"
+  unknown-player: "&cThis player is not online."
+
+invsee:
+  messages:
+    open: "&aYou are now viewing &e%target%'s &ainventory."
+    offline: "&cPlayer &e%target% &cis offline."
+    self: "&cYou cannot use /invsee on yourself."
+    usage: "&cUsage: &e/invsee <player>"

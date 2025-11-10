@@ -33,7 +33,7 @@ public class GmCommand implements CommandExecutor, TabCompleter {
         }
 
         if (!sender.hasPermission("lowcore.gm")) {
-            LowCore.sendMessage(sender, "&cYou do not have permission to use this command!");
+            LowCore.sendConfigMessage(sender, "no-permission");
             return true;
         }
 
@@ -42,12 +42,12 @@ public class GmCommand implements CommandExecutor, TabCompleter {
         if (args.length >= 2) {
             target = Bukkit.getPlayerExact(args[1]);
             if (target == null) {
-                LowCore.sendMessage(sender, "&cPlayer not found!");
+                LowCore.sendConfigMessage(sender, "unknown-player");
                 return true;
             }
         } else {
             if (!(sender instanceof Player)) {
-                LowCore.sendMessage(sender, "&cConsole must specify a player!");
+                LowCore.sendConfigMessage(sender, "player-only");
                 return true;
             }
             target = (Player) sender;

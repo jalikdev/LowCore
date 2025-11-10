@@ -12,14 +12,14 @@ public class FlyCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         if (!(sender instanceof Player)) {
-            LowCore.sendMessage(sender, "This command can only be used in-game!");
+            LowCore.sendConfigMessage(sender, "player-only");
             return true;
         }
 
         Player player = (Player) sender;
 
         if (!player.hasPermission("lowcore.fly")) {
-            LowCore.sendMessage(player, "§cYou don't have permission!");
+            LowCore.sendConfigMessage(player, "no-permission");
             return true;
         }
 

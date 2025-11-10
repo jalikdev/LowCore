@@ -24,14 +24,13 @@ public class EcCommand implements CommandExecutor, TabCompleter {
 
 
         if (args.length == 0) {
-            // eigene Enderchest
             if (!(sender instanceof Player)) {
                 LowCore.sendMessage(sender, "&cConsole must specify a player: &e/ec <player>");
                 return true;
             }
 
             if (!sender.hasPermission("lowcore.ec")) {
-                LowCore.sendMessage(sender, "&cYou do not have permission to use this command!");
+                LowCore.sendConfigMessage(sender, "no-permission");
                 return true;
             }
 
@@ -42,18 +41,18 @@ public class EcCommand implements CommandExecutor, TabCompleter {
         }
 
         if (!sender.hasPermission("lowcore.ec.others")) {
-            LowCore.sendMessage(sender, "&cYou do not have permission to open other players' ender chests!");
+            LowCore.sendConfigMessage(sender, "no-permission");
             return true;
         }
 
         Player target = Bukkit.getPlayerExact(args[0]);
         if (target == null) {
-            LowCore.sendMessage(sender, "&cPlayer not found!");
+            LowCore.sendConfigMessage(sender, "unknown-player");
             return true;
         }
 
         if (!(sender instanceof Player)) {
-            LowCore.sendMessage(sender, "&cOnly players can view ender chests directly.");
+            LowCore.sendConfigMessage(sender, "player-only");
             return true;
         }
 

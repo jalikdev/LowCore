@@ -19,8 +19,6 @@ import java.util.*;
 public class InvseeCommand implements CommandExecutor, TabCompleter, Listener {
 
     private final LowCore plugin;
-
-    // Viewer -> Session
     private final Map<UUID, InvseeSession> sessions = new HashMap<>();
 
     public InvseeCommand(LowCore plugin) {
@@ -33,6 +31,43 @@ public class InvseeCommand implements CommandExecutor, TabCompleter, Listener {
         int taskId;
     }
 
+    private void syncToTarget(Inventory inv, Player target) {
+        PlayerInventory tInv = target.getInventory();
+
+        for (int i = 0; i < 36; i++) {
+            tInv.setItem(i, inv.getItem(i));
+        }
+
+        tInv.setHelmet(inv.getItem(36));
+        tInv.setChestplate(inv.getItem(37));
+        tInv.setLeggings(inv.getItem(38));
+        tInv.setBoots(inv.getItem(39));
+        tInv.setItemInOffHand(inv.getItem(40));
+
+        target.updateInventory();
+    }
+
+    private void syncFromTarget(Player target, Inventory inv) {
+        PlayerInventory tInv = target.getInventory();
+
+        for (int i = 0; i < 36; i++) {
+            inv.setItem(i, tInv.getItem(i));
+        }
+
+        inv.setItem(36, tInv.getHelmet());
+        inv.setItem(37, tInv.getChestplate());
+        inv.setItem(38, tInv.getLeggings());
+        inv.setItem(39, tInv.getBoots());
+        inv.setItem(40, tInv.getItemInOffHand());
+    }
+
+    private void stopSession(UUID viewerId) {
+        InvseeSession s = sessions.remove(viewerId);
+        if (s != null) {
+            Bukkit.getScheduler().cancelTask(s.taskId);
+        }
+    }
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender,
                              @NotNull Command command,
@@ -40,25 +75,30 @@ public class InvseeCommand implements CommandExecutor, TabCompleter, Listener {
                              @NotNull String[] args) {
 
         if (!(sender instanceof Player)) {
-            LowCore.sendMessage(sender, "&cOnly players can use this command.");
+            LowCore.sendConfigMessage(sender, "player-only");
             return true;
         }
 
         Player viewer = (Player) sender;
 
         if (!viewer.hasPermission("lowcore.invsee")) {
-            LowCore.sendMessage(viewer, "&cYou do not have permission to use this command!");
+            LowCore.sendConfigMessage(viewer, "no-permission");
             return true;
         }
 
         if (args.length != 1) {
-            LowCore.sendMessage(viewer, "&cUsage: &e/invsee <player>");
+            LowCore.sendConfigMessage(viewer, "invsee.usage");
             return true;
         }
 
         Player target = Bukkit.getPlayerExact(args[0]);
         if (target == null) {
-            LowCore.sendMessage(viewer, "&cPlayer not found!");
+            LowCore.sendConfigMessage(viewer, "unknown-player");
+            return true;
+        }
+
+        if (target.getUniqueId().equals(viewer.getUniqueId())) {
+            LowCore.sendConfigMessage(viewer, "invsee.self");
             return true;
         }
 
@@ -82,7 +122,7 @@ public class InvseeCommand implements CommandExecutor, TabCompleter, Listener {
             Player t = Bukkit.getPlayer(session.targetId);
             if (t == null || !t.isOnline()) {
                 viewer.closeInventory();
-                LowCore.sendMessage(viewer, "&cPlayer went offline.");
+                LowCore.sendConfigMessage(viewer, "invsee.offline", "target", target.getName());
                 stopSession(viewer.getUniqueId());
                 return;
             }
@@ -94,31 +134,15 @@ public class InvseeCommand implements CommandExecutor, TabCompleter, Listener {
         sessions.put(viewer.getUniqueId(), session);
 
         viewer.openInventory(inv);
-        LowCore.sendMessage(viewer, "&aOpened live inventory of &e" + target.getName() + "&a.");
+
+        LowCore.sendConfigMessage(
+                viewer,
+                "invsee.open",
+                "player", viewer.getName(),
+                "target", target.getName()
+        );
 
         return true;
-    }
-
-    private void syncFromTarget(Player target, Inventory inv) {
-        PlayerInventory tInv = target.getInventory();
-
-        // Slots 0-35: Main + Hotbar
-        for (int i = 0; i < 36; i++) {
-            inv.setItem(i, tInv.getItem(i));
-        }
-
-        inv.setItem(36, tInv.getHelmet());
-        inv.setItem(37, tInv.getChestplate());
-        inv.setItem(38, tInv.getLeggings());
-        inv.setItem(39, tInv.getBoots());
-        inv.setItem(40, tInv.getItemInOffHand());
-    }
-
-    private void stopSession(UUID viewerId) {
-        InvseeSession s = sessions.remove(viewerId);
-        if (s != null) {
-            Bukkit.getScheduler().cancelTask(s.taskId);
-        }
     }
 
     @EventHandler
@@ -128,9 +152,25 @@ public class InvseeCommand implements CommandExecutor, TabCompleter, Listener {
         InvseeSession session = sessions.get(viewer.getUniqueId());
         if (session == null) return;
 
-        if (event.getView().getTopInventory().equals(session.inv)) {
+        if (!event.getView().getTopInventory().equals(session.inv)) return;
+
+        if (!viewer.hasPermission("lowcore.invsee.edit")) {
             event.setCancelled(true);
+            return;
         }
+
+        Inventory clicked = event.getClickedInventory();
+        if (clicked == null) return;
+
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            Player target = Bukkit.getPlayer(session.targetId);
+            if (target == null || !target.isOnline()) {
+                viewer.closeInventory();
+                stopSession(viewer.getUniqueId());
+                return;
+            }
+            syncToTarget(session.inv, target);
+        });
     }
 
     @EventHandler
@@ -140,9 +180,22 @@ public class InvseeCommand implements CommandExecutor, TabCompleter, Listener {
         InvseeSession session = sessions.get(viewer.getUniqueId());
         if (session == null) return;
 
-        if (event.getView().getTopInventory().equals(session.inv)) {
+        if (!event.getView().getTopInventory().equals(session.inv)) return;
+
+        if (!viewer.hasPermission("lowcore.invsee.edit")) {
             event.setCancelled(true);
+            return;
         }
+
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            Player target = Bukkit.getPlayer(session.targetId);
+            if (target == null || !target.isOnline()) {
+                viewer.closeInventory();
+                stopSession(viewer.getUniqueId());
+                return;
+            }
+            syncToTarget(session.inv, target);
+        });
     }
 
     @EventHandler
@@ -171,7 +224,11 @@ public class InvseeCommand implements CommandExecutor, TabCompleter, Listener {
             String current = args[0].toLowerCase();
             List<String> result = new ArrayList<>();
 
+            Player self = (sender instanceof Player) ? (Player) sender : null;
+
             for (Player p : Bukkit.getOnlinePlayers()) {
+                if (self != null && p.getUniqueId().equals(self.getUniqueId())) continue;
+
                 if (p.getName().toLowerCase().startsWith(current)) {
                     result.add(p.getName());
                 }
