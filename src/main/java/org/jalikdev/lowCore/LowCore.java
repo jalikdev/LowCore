@@ -12,6 +12,7 @@ import org.jalikdev.lowCore.commands.HatCommand;
 import org.jalikdev.lowCore.commands.FeedCommand;
 import org.jalikdev.lowCore.commands.HealCommand;
 import org.jalikdev.lowCore.commands.SpawnMobCommand;
+import org.jalikdev.lowCore.commands.EnchantCommand;
 
 import java.util.Objects;
 
@@ -69,6 +70,10 @@ public class LowCore extends JavaPlugin {
         SpawnMobCommand spawnMobCommand = new SpawnMobCommand(this);
         Objects.requireNonNull(getCommand("spawnmob")).setExecutor(spawnMobCommand);
         Objects.requireNonNull(getCommand("spawnmob")).setTabCompleter(spawnMobCommand);
+
+        EnchantCommand enchantCommand = new EnchantCommand(this);
+        Objects.requireNonNull(getCommand("enchant")).setExecutor(enchantCommand);
+        Objects.requireNonNull(getCommand("enchant")).setTabCompleter(enchantCommand);
     }
 
     @Override

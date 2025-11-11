@@ -101,3 +101,22 @@ spawnmob:
     no-target: "&cNo valid target in sight."
     success: "&aSpawned &f%amount%x %type% &aat your target."
     restricted: "&cYou are not allowed to spawn &f%type%&c."
+
+# ======================
+# Entchant
+# ======================
+enchant:
+  messages:
+    usage: "&cUsage: /enchant <enchant> [level] | /enchant remove <enchant> | /enchant clear | /enchant name <name> | /enchant resetname"
+    no-permission: "&cYou don't have permission to use this command."
+    no-item: "&cYou must hold an item in your hand."
+    invalid-enchant: "&cUnknown or incompatible enchantment: &f%enchant%&c."
+    invalid-level: "&cInvalid level."
+    incompatible-block: "&cThe enchantment &f%enchant% &ccannot be applied to this item."
+    incompatible-unsafe: "&eNote: The enchantment &f%enchant% &eis not normally compatible with this item and may not work."
+    applied: "&aAdded &f%enchant% %level% &ato your item."
+    removed: "&aRemoved &f%enchant% &afrom your item."
+    cleared: "&aRemoved all enchantments from your item."
+    none-to-clear: "&cThis item has no enchantments."
+    renamed: "&aRenamed your item to &f%name%&a."
+    resetname: "&aReset the name of your item."

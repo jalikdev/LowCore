@@ -32,6 +32,9 @@ commands:
   spawnmob:
     description: Spawn a Mob
     usage: /spawnmob <mob> [amount]
+  enchant:
+    description: Enchant and modify items.
+    usage: /enchant <enchant> [level] | /enchant remove <enchant> | /enchant clear | /enchant name <name> | /enchant resetname
 
 permissions:
   lowcore.hat:
@@ -68,4 +71,8 @@ permissions:
 
   lowcore.spawnmob:
     description: Spawn a Mob
+    default: op
+
+  lowcore.enchant:
+    description: Enchant Items etc.
     default: op
