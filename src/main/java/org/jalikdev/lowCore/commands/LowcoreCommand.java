@@ -15,7 +15,7 @@ import java.util.List;
 public class LowcoreCommand implements CommandExecutor, TabCompleter {
 
     private final LowCore plugin;
-    private final List<String> mainSubcommands = Arrays.asList("help", "info");
+    private final List<String> mainSubcommands = Arrays.asList("help", "info", "reload");
     private final List<String> helpTopics = Arrays.asList(
             "lowcore", "ec", "enchant", "feed", "fly", "gm", "hat", "heal", "invsee", "spawnmob"
     );
@@ -50,8 +50,18 @@ public class LowcoreCommand implements CommandExecutor, TabCompleter {
 
         if (sub.equals("info")) {
             LowCore.sendMessage(sender, "&aLowCore &7by &ajalikdev");
-            LowCore.sendMessage(sender, "&7Lightweight core commands for your server.");
-            LowCore.sendMessage(sender, "&7Use &a/lowcore help &7for command list.");
+            LowCore.sendMessage(sender, "&7Lightweight core plugin with essential commands.");
+            LowCore.sendMessage(sender, "&7Use &a/lowcore help &7for the full command list.");
+            return true;
+        }
+
+        if (sub.equals("reload")) {
+            if (!sender.hasPermission("lowcore.reload")) {
+                LowCore.sendConfigMessage(sender, "no-permission");
+                return true;
+            }
+
+            plugin.reloadLowCoreConfig(sender);
             return true;
         }
 
@@ -63,8 +73,9 @@ public class LowcoreCommand implements CommandExecutor, TabCompleter {
         LowCore.sendMessage(sender, "&8&m-------------------------------");
         LowCore.sendMessage(sender, "&aLowCore &7Command Overview:");
         LowCore.sendMessage(sender, "&a/lowcore help &7- Show this help.");
-        LowCore.sendMessage(sender, "&a/lowcore help <command> &7- Show detailed help for a command.");
+        LowCore.sendMessage(sender, "&a/lowcore help <command> &7- Detailed help for a specific command.");
         LowCore.sendMessage(sender, "&a/lowcore info &7- Plugin information.");
+        LowCore.sendMessage(sender, "&a/lowcore reload &7- Reload the config (Admins only).");
         LowCore.sendMessage(sender, "&a/ec &7- Open your ender chest.");
         LowCore.sendMessage(sender, "&a/enchant &7- Advanced enchanting and item renaming.");
         LowCore.sendMessage(sender, "&a/feed &7- Feed yourself or another player.");
@@ -80,9 +91,10 @@ public class LowcoreCommand implements CommandExecutor, TabCompleter {
     private void sendDetailedHelp(CommandSender sender, String topic) {
         switch (topic) {
             case "lowcore":
-                LowCore.sendMessage(sender, "&a/lowcore help &7- Shows all available LowCore commands.");
-                LowCore.sendMessage(sender, "&a/lowcore help <command> &7- Detailed help for a specific command.");
-                LowCore.sendMessage(sender, "&a/lowcore info &7- Basic plugin information.");
+                LowCore.sendMessage(sender, "&a/lowcore help &7- Show all available LowCore commands.");
+                LowCore.sendMessage(sender, "&a/lowcore help <command> &7- Detailed help for one command.");
+                LowCore.sendMessage(sender, "&a/lowcore info &7- Show plugin information.");
+                LowCore.sendMessage(sender, "&a/lowcore reload &7- Reload the config (requires &flowcore.reload&7).");
                 break;
 
             case "ec":
@@ -97,17 +109,17 @@ public class LowcoreCommand implements CommandExecutor, TabCompleter {
 
             case "fly":
                 LowCore.sendMessage(sender, "&a/fly");
-                LowCore.sendMessage(sender, "&7Toggle flight for yourself (requires permission).");
+                LowCore.sendMessage(sender, "&7Toggle flight for yourself (permission required).");
                 break;
 
             case "gm":
                 LowCore.sendMessage(sender, "&a/gm <mode>");
-                LowCore.sendMessage(sender, "&7Fast gamemode switch (survival, creative, adventure, spectator).");
+                LowCore.sendMessage(sender, "&7Quickly change your gamemode (0/1/2/3 or names).");
                 break;
 
             case "hat":
                 LowCore.sendMessage(sender, "&a/hat");
-                LowCore.sendMessage(sender, "&7Move the currently held item to your helmet slot.");
+                LowCore.sendMessage(sender, "&7Move the item in your hand to your helmet slot.");
                 break;
 
             case "heal":
@@ -117,25 +129,25 @@ public class LowcoreCommand implements CommandExecutor, TabCompleter {
 
             case "invsee":
                 LowCore.sendMessage(sender, "&a/invsee <player>");
-                LowCore.sendMessage(sender, "&7Open and live-sync another player's inventory.");
+                LowCore.sendMessage(sender, "&7View and live-sync another player's inventory.");
                 break;
 
             case "spawnmob":
                 LowCore.sendMessage(sender, "&a/spawnmob <mob> [amount]");
-                LowCore.sendMessage(sender, "&7Spawn mobs at the block or location you are looking at.");
-                LowCore.sendMessage(sender, "&7Respects a max-amount from config and restricted mobs.");
-                LowCore.sendMessage(sender, "&7Tab-Completion für Entity-Namen ist verfügbar.");
+                LowCore.sendMessage(sender, "&7Spawn mobs at the block/location you are looking at.");
+                LowCore.sendMessage(sender, "&7Respects a max-amount and restricted mobs from config.");
+                LowCore.sendMessage(sender, "&7Tab completion helps with valid mob names.");
                 break;
 
             case "enchant":
                 LowCore.sendMessage(sender, "&a/enchant <enchant> [level]");
-                LowCore.sendMessage(sender, "&7Enchant the item in your hand with the given enchantment and level.");
-                LowCore.sendMessage(sender, "&a/enchant remove <enchant> &7- Remove a specific enchantment from the held item.");
+                LowCore.sendMessage(sender, "&7Enchant the item in your hand.");
+                LowCore.sendMessage(sender, "&a/enchant remove <enchant> &7- Remove a specific enchantment.");
                 LowCore.sendMessage(sender, "&a/enchant clear &7- Remove all enchantments from the held item.");
                 LowCore.sendMessage(sender, "&a/enchant name <name> &7- Rename the held item (& codes supported).");
                 LowCore.sendMessage(sender, "&a/enchant resetname &7- Reset the custom name of the held item.");
-                LowCore.sendMessage(sender, "&7Without bypass: only valid levels and compatible enchants.");
-                LowCore.sendMessage(sender, "&7With &alowcore.enchant.bypass&7: unsafe up to 255 and incompatible enchants allowed.");
+                LowCore.sendMessage(sender, "&7Without bypass: only compatible enchants and vanilla max levels.");
+                LowCore.sendMessage(sender, "&7With &alowcore.enchant.bypass&7: unsafe up to 255, incompatible allowed (with warning).");
                 break;
 
             default:
