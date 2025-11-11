@@ -1,14 +1,14 @@
 # ╔══════════════════════════════════════════════════╗
 # ║                LowCore Config                    ║
 # ╚══════════════════════════════════════════════════╝
-#  ⚙️  GENERAL INFORMATION
+#  GENERAL INFORMATION
 #  ──────────────────────────────────────────────────────────────────
 #  This file controls all plugin messages, prefixes, and features.
 #  Changes require either:
 #     - /lowcore reload   (reloads the config)
 #     - or a server restart
 #
-#  🎨  COLOR CODES
+#  COLOR CODES
 #  ──────────────────────────────────────────────────────────────────
 #  You can use the following Minecraft color codes in all messages:
 #     &0  Black            &8  Dark Gray
@@ -25,7 +25,7 @@
 #     &o  Italic           &m  Strikethrough
 #     &r  Reset (clears formatting)
 #
-#  🧩  PLACEHOLDERS
+#  PLACEHOLDERS
 #  ──────────────────────────────────────────────────────────────────
 #  You can use placeholders in messages that will be replaced automatically:
 #     %player%   → the player who executed the command
@@ -48,9 +48,31 @@ messages:
   player-only: "&cOnly players can use this command!"
   unknown-player: "&cThis player is not online."
 
+# ======================
+# Invsee
+# ======================
 invsee:
   messages:
     open: "&aYou are now viewing &e%target%'s &ainventory."
     offline: "&cPlayer &e%target% &cis offline."
     self: "&cYou cannot use /invsee on yourself."
     usage: "&cUsage: &e/invsee <player>"
+
+# ======================
+# Heal & Feed Settings
+# ======================
+heal:
+  messages:
+    self: "&aYou have been healed!"
+    other: "&aYou healed &f%player%!"
+    target: "&aYou have been healed by &f%healer%!"
+    no-permission: "&cYou don't have permission to use this command."
+    player-not-found: "&cThat player is not online."
+
+feed:
+  messages:
+    self: "&aYou have been fed!"
+    other: "&aYou fed &f%player%!"
+    target: "&aYou have been fed by &f%feeder%!"
+    no-permission: "&cYou don't have permission to use this command."
+    player-not-found: "&cThat player is not online."

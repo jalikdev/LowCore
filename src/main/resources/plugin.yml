@@ -23,6 +23,13 @@ commands:
   hat:
     description: Put the item in your hand on your head
     usage: /hat [player]
+  heal:
+    description: Heal yourself or others
+    usage: /heal [player]
+  feed:
+    description: Feed yourself or others
+    usage: /feed [player]
+
 
 permissions:
   lowcore.hat:
@@ -41,4 +48,18 @@ permissions:
     default: op
   lowcore.ec.others:
     description: Open others' ender chests
+    default: op
+
+  lowcore.heal:
+    description: Heal yourself
+    default: op
+  lowcore.heal.others:
+    description: Heal others
+    default: op
+
+  lowcore.feed:
+    description: Feed yourself
+    default: op
+  lowcore.feed.others:
+    description: Feed others
     default: op
