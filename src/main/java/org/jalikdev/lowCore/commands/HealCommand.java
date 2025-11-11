@@ -37,6 +37,7 @@ public class HealCommand implements CommandExecutor {
             player.setHealth(player.getMaxHealth());
             player.setFireTicks(0);
             LowCore.sendConfigMessage(player, "heal.self");
+            return true;
         }
 
         if (!sender.hasPermission("lowcore.heal.others")) {
