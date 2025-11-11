@@ -8,44 +8,64 @@ commands:
   lowcore:
     description: Main command for LowCore
     usage: /lowcore
+    permission: lowcore.command
+
   fly:
     description: Toggles flight
     usage: /fly
+    permission: lowcore.fly
+
   gm:
     description: Changes gamemode
     usage: /gm
+    permission: lowcore.gm
+
   ec:
     description: Open your ender chest or another player's
     usage: /ec [player]
+    permission: lowcore.ec
+
   invsee:
     description: View another player's inventory
     usage: /invsee <player>
+    permission: lowcore.invsee
+
   hat:
     description: Put the item in your hand on your head
     usage: /hat [player]
+    permission: lowcore.hat
+
   heal:
     description: Heal yourself or others
     usage: /heal [player]
+    permission: lowcore.heal
+
   feed:
     description: Feed yourself or others
     usage: /feed [player]
+    permission: lowcore.feed
+
   spawnmob:
     description: Spawn a Mob
     usage: /spawnmob <mob> [amount]
+    permission: lowcore.spawnmob
+
   enchant:
     description: Enchant and modify items.
     usage: /enchant <enchant> [level] | /enchant remove <enchant> | /enchant clear | /enchant name <name> | /enchant resetname
+    permission: lowcore.enchant
 
 permissions:
-  lowcore.hat:
-    description: Use /hat on yourself
-    default: true
-  lowcore.hat.others:
-    description: Use /hat on other players
+  lowcore.command:
+    description: Use /lowcore
     default: op
 
-  lowcore.invsee:
-    description: View other players' inventories
+  lowcore.fly:
+    description: Use /fly
+    default: op
+
+  lowcore.gm:
+    description: Use /gm
     default: op
 
   lowcore.ec:
@@ -53,6 +73,17 @@ permissions:
     default: op
   lowcore.ec.others:
     description: Open others' ender chests
+    default: op
+
+  lowcore.invsee:
+    description: View other players' inventories
+    default: op
+
+  lowcore.hat:
+    description: Use /hat on yourself
+    default: true
+  lowcore.hat.others:
+    description: Use /hat on other players
     default: op
 
   lowcore.heal:
@@ -74,5 +105,5 @@ permissions:
     default: op
 
   lowcore.enchant:
-    description: Enchant Items etc.
+    description: Enchant items etc.
     default: op
