@@ -1,5 +1,5 @@
 name: LowCore
-version: '1.1.2'
+version: '1.1.3'
 main: org.jalikdev.lowCore.LowCore
 api-version: '1.21'
 author: 'jan'
@@ -29,7 +29,9 @@ commands:
   feed:
     description: Feed yourself or others
     usage: /feed [player]
-
+  spawnmob:
+    description: Spawn a Mob
+    usage: /spawnmob <mob> [amount]
 
 permissions:
   lowcore.hat:
@@ -62,4 +64,8 @@ permissions:
     default: op
   lowcore.feed.others:
     description: Feed others
+    default: op
+
+  lowcore.spawnmob:
+    description: Spawn a Mob
     default: op

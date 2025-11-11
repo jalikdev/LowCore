@@ -76,3 +76,28 @@ feed:
     target: "&aYou have been fed by &f%feeder%!"
     no-permission: "&cYou don't have permission to use this command."
     player-not-found: "&cThat player is not online."
+
+# ======================
+# Mob Spawner
+# ======================
+spawnmob:
+  # max ammount of mobs that can be spawned at a time
+  max-ammount: 20
+
+  # mobs that are restricted
+  restricted-mobs:
+    - WITHER
+    - ENDER_DRAGON
+    - WARDEN
+  # role to spawn these restricted mobs
+  restricted-permission: "lowcore.spawnmob.restricted"
+
+  messages:
+    usage: "&cUsage: /spawnmob <mob> [amount]"
+    no-permission: "&cYou don't have permission to use this command."
+    no-permission-restricted: "&cYou are not allowed to spawn this mob."
+    invalid-entity: "&cUnknown or unsupported mob type: &f%type%&c."
+    invalid-amount: "&cInvalid amount. Use a number between 1 and %max%."
+    no-target: "&cNo valid target in sight."
+    success: "&aSpawned &f%amount%x %type% &aat your target."
+    restricted: "&cYou are not allowed to spawn &f%type%&c."
