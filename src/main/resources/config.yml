@@ -38,15 +38,19 @@
 # Command Output prefix
 prefix: "&8[&aLowCore&8] &7" # leave a Space at the end
 
-# General settings
-features:
-
 # General config messages
 messages:
   reload: "&aLowCore config reloaded!"
   no-permission: "&cYou do not have permission!"
   player-only: "&cOnly players can use this command!"
   unknown-player: "&cThis player is not online."
+
+# ======================
+# Base Command
+# ======================
+lowcore:
+  messages:
+    help-unknown-topic: "&cNo detailed help available for &f%topic%&c."
 
 # ======================
 # Invsee

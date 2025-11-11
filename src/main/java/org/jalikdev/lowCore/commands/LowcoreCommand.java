@@ -4,54 +4,144 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.jalikdev.lowCore.LowCore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jalikdev.lowCore.LowCore;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class LowcoreCommand implements CommandExecutor, TabCompleter {
 
-    private final List<String> subcommands = Arrays.asList("reload", "info", "help");
     private final LowCore plugin;
+    private final List<String> mainSubcommands = Arrays.asList("help", "info");
+    private final List<String> helpTopics = Arrays.asList(
+            "lowcore", "ec", "enchant", "feed", "fly", "gm", "hat", "heal", "invsee", "spawnmob"
+    );
 
     public LowcoreCommand(LowCore plugin) {
         this.plugin = plugin;
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
-                             @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender,
+                             @NotNull Command command,
+                             @NotNull String label,
+                             @NotNull String[] args) {
+
         if (args.length == 0) {
-            sender.sendMessage("§aLowCore Plugin §7- §e/help §7for commands");
+            sendMainHelp(sender);
             return true;
         }
 
-        switch (args[0].toLowerCase()) {
-            case "reload":
-                if(!sender.hasPermission("lowcore.reload")) {
-                    LowCore.sendConfigMessage(sender, "no-permission");
-                    return true;
-                }
-                plugin.reloadLowCoreConfig(sender);
+        String sub = args[0].toLowerCase();
+
+        if (sub.equals("help")) {
+            if (args.length == 1) {
+                sendMainHelp(sender);
+                return true;
+            }
+
+            String topic = args[1].toLowerCase();
+            sendDetailedHelp(sender, topic);
+            return true;
+        }
+
+        if (sub.equals("info")) {
+            LowCore.sendMessage(sender, "&aLowCore &7by &ajalikdev");
+            LowCore.sendMessage(sender, "&7Lightweight core commands for your server.");
+            LowCore.sendMessage(sender, "&7Use &a/lowcore help &7for command list.");
+            return true;
+        }
+
+        sendMainHelp(sender);
+        return true;
+    }
+
+    private void sendMainHelp(CommandSender sender) {
+        LowCore.sendMessage(sender, "&8&m-------------------------------");
+        LowCore.sendMessage(sender, "&aLowCore &7Command Overview:");
+        LowCore.sendMessage(sender, "&a/lowcore help &7- Show this help.");
+        LowCore.sendMessage(sender, "&a/lowcore help <command> &7- Show detailed help for a command.");
+        LowCore.sendMessage(sender, "&a/lowcore info &7- Plugin information.");
+        LowCore.sendMessage(sender, "&a/ec &7- Open your ender chest.");
+        LowCore.sendMessage(sender, "&a/enchant &7- Advanced enchanting and item renaming.");
+        LowCore.sendMessage(sender, "&a/feed &7- Feed yourself or another player.");
+        LowCore.sendMessage(sender, "&a/fly &7- Toggle flight.");
+        LowCore.sendMessage(sender, "&a/gm &7- Change your gamemode.");
+        LowCore.sendMessage(sender, "&a/hat &7- Put the held item on your head.");
+        LowCore.sendMessage(sender, "&a/heal &7- Heal yourself or another player.");
+        LowCore.sendMessage(sender, "&a/invsee &7- View and live-sync another player's inventory.");
+        LowCore.sendMessage(sender, "&a/spawnmob &7- Spawn mobs where you are looking.");
+        LowCore.sendMessage(sender, "&8&m-------------------------------");
+    }
+
+    private void sendDetailedHelp(CommandSender sender, String topic) {
+        switch (topic) {
+            case "lowcore":
+                LowCore.sendMessage(sender, "&a/lowcore help &7- Shows all available LowCore commands.");
+                LowCore.sendMessage(sender, "&a/lowcore help <command> &7- Detailed help for a specific command.");
+                LowCore.sendMessage(sender, "&a/lowcore info &7- Basic plugin information.");
                 break;
 
-            case "info":
-                sender.sendMessage("&Running &a Lowcore &7by &ajalikdev&7.");
+            case "ec":
+                LowCore.sendMessage(sender, "&a/ec");
+                LowCore.sendMessage(sender, "&7Open your ender chest quickly.");
                 break;
 
-            case "help":
-                sender.sendMessage("&aAvailable commands: reload, info, help");
+            case "feed":
+                LowCore.sendMessage(sender, "&a/feed &7- Feed yourself.");
+                LowCore.sendMessage(sender, "&a/feed <player> &7- Feed another player.");
+                break;
+
+            case "fly":
+                LowCore.sendMessage(sender, "&a/fly");
+                LowCore.sendMessage(sender, "&7Toggle flight for yourself (requires permission).");
+                break;
+
+            case "gm":
+                LowCore.sendMessage(sender, "&a/gm <mode>");
+                LowCore.sendMessage(sender, "&7Fast gamemode switch (survival, creative, adventure, spectator).");
+                break;
+
+            case "hat":
+                LowCore.sendMessage(sender, "&a/hat");
+                LowCore.sendMessage(sender, "&7Move the currently held item to your helmet slot.");
+                break;
+
+            case "heal":
+                LowCore.sendMessage(sender, "&a/heal &7- Heal yourself.");
+                LowCore.sendMessage(sender, "&a/heal <player> &7- Heal another player.");
+                break;
+
+            case "invsee":
+                LowCore.sendMessage(sender, "&a/invsee <player>");
+                LowCore.sendMessage(sender, "&7Open and live-sync another player's inventory.");
+                break;
+
+            case "spawnmob":
+                LowCore.sendMessage(sender, "&a/spawnmob <mob> [amount]");
+                LowCore.sendMessage(sender, "&7Spawn mobs at the block or location you are looking at.");
+                LowCore.sendMessage(sender, "&7Respects a max-amount from config and restricted mobs.");
+                LowCore.sendMessage(sender, "&7Tab-Completion für Entity-Namen ist verfügbar.");
+                break;
+
+            case "enchant":
+                LowCore.sendMessage(sender, "&a/enchant <enchant> [level]");
+                LowCore.sendMessage(sender, "&7Enchant the item in your hand with the given enchantment and level.");
+                LowCore.sendMessage(sender, "&a/enchant remove <enchant> &7- Remove a specific enchantment from the held item.");
+                LowCore.sendMessage(sender, "&a/enchant clear &7- Remove all enchantments from the held item.");
+                LowCore.sendMessage(sender, "&a/enchant name <name> &7- Rename the held item (& codes supported).");
+                LowCore.sendMessage(sender, "&a/enchant resetname &7- Reset the custom name of the held item.");
+                LowCore.sendMessage(sender, "&7Without bypass: only valid levels and compatible enchants.");
+                LowCore.sendMessage(sender, "&7With &alowcore.enchant.bypass&7: unsafe up to 255 and incompatible enchants allowed.");
                 break;
 
             default:
-                sender.sendMessage("&cUnknown subcommand. Use /lowcore help for a list of commands.");
+                LowCore.sendConfigMessage(sender, "lowcore.help-unknown-topic", "topic", topic);
+                break;
         }
-
-        return true;
     }
 
     @Override
@@ -59,18 +149,29 @@ public class LowcoreCommand implements CommandExecutor, TabCompleter {
                                                 @NotNull Command command,
                                                 @NotNull String alias,
                                                 @NotNull String[] args) {
-        if (args.length == 1) {
-            String current = args[0].toLowerCase();
-            List<String> result = new ArrayList<>();
 
-            for (String sub : subcommands) {
-                if (sub.startsWith(current)) {
+        List<String> result = new ArrayList<>();
+
+        if (args.length == 1) {
+            String input = args[0].toLowerCase();
+            for (String sub : mainSubcommands) {
+                if (sub.startsWith(input)) {
                     result.add(sub);
                 }
             }
             return result;
         }
-        return Collections.emptyList();
+
+        if (args.length == 2 && args[0].equalsIgnoreCase("help")) {
+            String input = args[1].toLowerCase();
+            for (String topic : helpTopics) {
+                if (topic.startsWith(input)) {
+                    result.add(topic);
+                }
+            }
+            return result;
+        }
+
+        return result;
     }
 }
-
