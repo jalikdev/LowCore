@@ -9,6 +9,8 @@ import org.jalikdev.lowCore.commands.LowcoreCommand;
 import org.jalikdev.lowCore.commands.EcCommand;
 import org.jalikdev.lowCore.commands.InvseeCommand;
 import org.jalikdev.lowCore.commands.HatCommand;
+import org.jalikdev.lowCore.commands.FeedCommand;
+import org.jalikdev.lowCore.commands.HealCommand;
 
 import java.util.Objects;
 
@@ -56,6 +58,12 @@ public class LowCore extends JavaPlugin {
 
         FlyCommand flyCommand = new FlyCommand();
         Objects.requireNonNull(getCommand("fly")).setExecutor(flyCommand);
+
+        HealCommand healCommand = new HealCommand(this);
+        Objects.requireNonNull(getCommand("heal")).setExecutor(healCommand);
+
+        FeedCommand feedCommand = new FeedCommand(this);
+        Objects.requireNonNull(getCommand("feed")).setExecutor(feedCommand);
     }
 
     @Override

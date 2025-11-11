@@ -8,11 +8,11 @@ import org.bukkit.entity.Player;
 import org.jalikdev.lowCore.LowCore;
 import org.jetbrains.annotations.NotNull;
 
-public class HealCommand implements CommandExecutor {
+public class FeedCommand implements CommandExecutor {
 
     private final LowCore plugin;
 
-    public HealCommand(LowCore plugin) {
+    public FeedCommand(LowCore plugin) {
         this.plugin = plugin;
     }
 
@@ -23,41 +23,39 @@ public class HealCommand implements CommandExecutor {
                              @NotNull String[] args) {
         if (args.length == 0) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage("&cOnly players can use this command.");
+                sender.sendMessage("&cOnly players can use this command!");
                 return true;
             }
 
             Player player = (Player) sender;
 
-            if (!player.hasPermission("lowcore.heal")) {
-                LowCore.sendConfigMessage(player, "heal.noPermission");
+            if (!player.hasPermission("lowcore.feed")) {
+                LowCore.sendConfigMessage(sender, "feed.no-permission");
                 return true;
             }
 
-            player.setHealth(player.getMaxHealth());
-            player.setFireTicks(0);
-            LowCore.sendConfigMessage(player, "heal.self");
+            player.setFoodLevel(20);
+            player.setSaturation(20);
+            LowCore.sendConfigMessage(player, "feed.self");
+            return true;
         }
 
-        if (!sender.hasPermission("lowcore.heal.others")) {
-            LowCore.sendConfigMessage(sender, "heal.no-permission");
+        if(!sender.hasPermission("lowcore.feed.others")) {
+            LowCore.sendConfigMessage(sender, "feed.no-permission");
             return true;
         }
 
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
-            LowCore.sendConfigMessage(sender, "heal.player-not-found");
+            LowCore.sendConfigMessage(sender, "feed.player-not-found");
             return true;
         }
 
-        target.setHealth(target.getMaxHealth());
-        target.setFireTicks(0);
+        target.setFoodLevel(20);
+        target.setSaturation(20);
 
-        String msgOther = plugin.formatMessage("heal.others", "player", target.getName());
-        String msgTarget = plugin.formatMessage("heal.target", "healer", sender.getName());
-
-        sender.sendMessage(msgOther);
-        target.sendMessage(msgTarget);
+        String msgOther = plugin.formatMessage("feed.others", "player", target.getName());
+        String msgTarget = plugin.formatMessage("feed.target", "feeder", sender.getName());
 
         return true;
     }
