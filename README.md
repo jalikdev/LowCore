@@ -33,14 +33,16 @@
 
 ## 🧩 Commands Overview
 
-| Command | Description | Permission | Default |
-|----------|--------------|-------------|----|
-| `/gm` | Change gamemode | `lowcore.gm` | op |
-| `/fly` | Toggle flight | `lowcore.fly` | op |
-| `/ec` | Open ender chest | `lowcore.ec` / `lowcore.ec.others` | op |
-| `/invsee` | View live inventory | `lowcore.invsee` | op |
-| `/hat` | Put held item on head | `lowcore.hat` / `lowcore.hat.others` | true / op |
-| `/lowcore` | Main command | `lowcore.use` | true |
+| Command    | Description | Permission                             | Default   |
+|------------|--------------|----------------------------------------|-----------|
+| `/gm`      | Change gamemode | `lowcore.gm`                           | op        |
+| `/fly`     | Toggle flight | `lowcore.fly`                          | op        |
+| `/ec`      | Open ender chest | `lowcore.ec` / `lowcore.ec.others`     | op        |
+| `/invsee`  | View live inventory | `lowcore.invsee`                       | op        |
+| `/hat`     | Put held item on head | `lowcore.hat` / `lowcore.hat.others`   | true / op |
+| `/lowcore` | Main command | `lowcore.use`                          | true      |
+| `/heal`    | Main command | `lowcore.heal` / `lowcore.heal.others` | op        |
+| `/feed`    | Main command | `lowcore.feed` / `lowcore.feed.others`  | op        |
 
 ---
 
