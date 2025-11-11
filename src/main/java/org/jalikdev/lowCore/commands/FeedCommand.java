@@ -54,8 +54,11 @@ public class FeedCommand implements CommandExecutor {
         target.setFoodLevel(20);
         target.setSaturation(20);
 
-        String msgOther = plugin.formatMessage("feed.others", "player", target.getName());
+        String msgOther = plugin.formatMessage("feed.other", "player", target.getName());
         String msgTarget = plugin.formatMessage("feed.target", "feeder", sender.getName());
+
+        sender.sendMessage(msgOther);
+        target.sendMessage(msgTarget);
 
         return true;
     }

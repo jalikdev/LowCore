@@ -53,7 +53,7 @@ public class HealCommand implements CommandExecutor {
         target.setHealth(target.getMaxHealth());
         target.setFireTicks(0);
 
-        String msgOther = plugin.formatMessage("heal.others", "player", target.getName());
+        String msgOther = plugin.formatMessage("heal.other", "player", target.getName());
         String msgTarget = plugin.formatMessage("heal.target", "healer", sender.getName());
 
         sender.sendMessage(msgOther);
