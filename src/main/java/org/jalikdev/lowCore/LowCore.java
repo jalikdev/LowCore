@@ -13,6 +13,8 @@ import org.jalikdev.lowCore.commands.FeedCommand;
 import org.jalikdev.lowCore.commands.HealCommand;
 import org.jalikdev.lowCore.commands.SpawnMobCommand;
 import org.jalikdev.lowCore.commands.EnchantCommand;
+import org.jalikdev.lowCore.commands.AnvilCommand;
+import org.jalikdev.lowCore.commands.RepairCommand;
 
 import java.util.Objects;
 
@@ -74,6 +76,13 @@ public class LowCore extends JavaPlugin {
         EnchantCommand enchantCommand = new EnchantCommand(this);
         Objects.requireNonNull(getCommand("enchant")).setExecutor(enchantCommand);
         Objects.requireNonNull(getCommand("enchant")).setTabCompleter(enchantCommand);
+
+        AnvilCommand anvilCommand = new AnvilCommand();
+        Objects.requireNonNull(getCommand("anvil")).setExecutor(anvilCommand);
+
+        RepairCommand repairCommand = new RepairCommand();
+        Objects.requireNonNull(getCommand("repair")).setExecutor(repairCommand);
+
     }
 
     @Override

@@ -55,6 +55,17 @@ commands:
     usage: /enchant <enchant> [level] | /enchant remove <enchant> | /enchant clear | /enchant name <name> | /enchant resetname
     permission: lowcore.enchant
 
+  anvil:
+    description: Opens an anvil interface.
+    usage: /anvil
+    permission: lowcore.anvil
+
+  repair:
+    description: Repairs your held item or all items.
+    usage: /repair [all]
+    permission: lowcore.repair
+
+
 permissions:
   lowcore.command:
     description: Use /lowcore
