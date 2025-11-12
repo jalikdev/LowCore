@@ -130,10 +130,11 @@ enchant:
 # Vanish
 # ======================
 vanish:
-  enabled: "&aYou are now vanished."
-  disabled: "&eYou are now visible."
-  fake-quit: "&e%player% left the game"
-  fake-join: "&e%player% joined the game"
+  messages:
+    enabled: "&aYou are now vanished."
+    disabled: "&eYou are now visible."
+    fake-quit: "&e%player% left the game"
+    fake-join: "&e%player% joined the game"
 
 # ======================
 # GodMode
