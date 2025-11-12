@@ -15,6 +15,8 @@ import org.jalikdev.lowCore.commands.SpawnMobCommand;
 import org.jalikdev.lowCore.commands.EnchantCommand;
 import org.jalikdev.lowCore.commands.AnvilCommand;
 import org.jalikdev.lowCore.commands.RepairCommand;
+import org.jalikdev.lowCore.commands.CraftCommand;
+import org.jalikdev.lowCore.commands.VanishCommand;
 
 import java.util.Objects;
 
@@ -82,6 +84,14 @@ public class LowCore extends JavaPlugin {
 
         RepairCommand repairCommand = new RepairCommand();
         Objects.requireNonNull(getCommand("repair")).setExecutor(repairCommand);
+
+        CraftCommand craftCommand = new CraftCommand();
+        Objects.requireNonNull(getCommand("craft")).setExecutor(craftCommand);
+        Objects.requireNonNull(getCommand("workbench")).setExecutor(craftCommand);
+
+        VanishCommand vanishCommand = new VanishCommand(this);
+        Objects.requireNonNull(getCommand("vanish")).setExecutor(vanishCommand);
+        getServer().getPluginManager().registerEvents(vanishCommand, this);
 
     }
 

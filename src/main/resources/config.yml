@@ -44,6 +44,7 @@ messages:
   no-permission: "&cYou do not have permission!"
   player-only: "&cOnly players can use this command!"
   unknown-player: "&cThis player is not online."
+  craft-opened: "&aCrafting table opened!"
 
 # ======================
 # Base Command
@@ -124,3 +125,13 @@ enchant:
     none-to-clear: "&cThis item has no enchantments."
     renamed: "&aRenamed your item to &f%name%&a."
     resetname: "&aReset the name of your item."
+
+# ======================
+# Entchant
+# ======================
+vanish:
+  enabled: "&aYou are now vanished."
+  disabled: "&eYou are now visible."
+  fake-quit: "&e%player% left the game"
+  fake-join: "&e%player% joined the game"
+

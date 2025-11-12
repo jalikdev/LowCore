@@ -65,6 +65,16 @@ commands:
     usage: /repair [all]
     permission: lowcore.repair
 
+  craft:
+    description: Opens a crafting table.
+    usage: /craft
+    permission: lowcore.craft
+
+  workbench:
+    description: Alias for /craft
+    usage: /workbench
+    permission: lowcore.craftd
+
 
 permissions:
   lowcore.command:
