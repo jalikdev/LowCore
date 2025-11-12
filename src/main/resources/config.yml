@@ -127,7 +127,7 @@ enchant:
     resetname: "&aReset the name of your item."
 
 # ======================
-# Entchant
+# Vanish
 # ======================
 vanish:
   enabled: "&aYou are now vanished."

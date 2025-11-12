@@ -73,7 +73,12 @@ commands:
   workbench:
     description: Alias for /craft
     usage: /workbench
-    permission: lowcore.craftd
+    permission: lowcore.craft
+
+  vanish:
+    description: Toggle vanish mode (hidden from players & tab, fake leave/join).
+    usage: /vanish
+    permission: lowcore.vanish
 
 
 permissions:

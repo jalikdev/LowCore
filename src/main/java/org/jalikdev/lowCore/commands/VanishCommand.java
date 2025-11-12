@@ -1,6 +1,7 @@
 package org.jalikdev.lowCore.commands;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -32,7 +33,6 @@ public class VanishCommand implements CommandExecutor, Listener {
             LowCore.sendConfigMessage(sender, "messages.player-only");
             return true;
         }
-
         Player player = (Player) sender;
 
         if (!player.hasPermission("lowcore.vanish")) {
@@ -42,38 +42,36 @@ public class VanishCommand implements CommandExecutor, Listener {
 
         if (vanished.contains(player.getUniqueId())) {
             vanished.remove(player.getUniqueId());
+
             for (Player p : Bukkit.getOnlinePlayers()) {
-                if (!p.equals(player)) {
-                    p.showPlayer(plugin, player);
-                }
+                if (!p.equals(player)) p.showPlayer(plugin, player);
             }
+
             try {
                 player.setSilent(false);
                 player.setCollidable(true);
                 player.setCanPickupItems(true);
             } catch (Throwable ignored) {}
 
-            LowCore.sendConfigMessage(player, "vanish.disabled");
-            Bukkit.getServer().broadcastMessage(
-                    plugin.getMessageRaw("vanish.fake-join").replace("%player%", player.getName())
-            );
+            player.sendMessage(colorize(plugin.getPrefix() + getCfg("vanish.disabled", "&eYou are now visible.")));
+
+            Bukkit.broadcastMessage(replacePlayer(colorize(getCfg("vanish.fake-join", "&e%player% joined the game")), player));
         } else {
             vanished.add(player.getUniqueId());
+
             for (Player p : Bukkit.getOnlinePlayers()) {
-                if (!p.equals(player)) {
-                    p.hidePlayer(plugin, player);
-                }
+                if (!p.equals(player)) p.hidePlayer(plugin, player);
             }
+
             try {
                 player.setSilent(true);
                 player.setCollidable(false);
                 player.setCanPickupItems(false);
             } catch (Throwable ignored) {}
 
-            LowCore.sendConfigMessage(player, "vanish.enabled");
-            Bukkit.getServer().broadcastMessage(
-                    plugin.getMessageRaw("vanish.fake-quit").replace("%player%", player.getName())
-            );
+            player.sendMessage(colorize(plugin.getPrefix() + getCfg("vanish.enabled", "&aYou are now vanished.")));
+
+            Bukkit.broadcastMessage(replacePlayer(colorize(getCfg("vanish.fake-quit", "&e%player% left the game")), player));
         }
 
         return true;
@@ -85,10 +83,24 @@ public class VanishCommand implements CommandExecutor, Listener {
         if (vanished.isEmpty()) return;
 
         for (UUID id : vanished) {
-            Player vanishedPlayer = Bukkit.getPlayer(id);
-            if (vanishedPlayer != null && vanishedPlayer.isOnline()) {
-                joiner.hidePlayer(plugin, vanishedPlayer);
+            Player v = Bukkit.getPlayer(id);
+            if (v != null && v.isOnline()) {
+                joiner.hidePlayer(plugin, v);
             }
         }
+    }
+
+
+    private String getCfg(String path, String def) {
+        String raw = plugin.getConfig().getString(path, def);
+        return raw != null ? raw : def;
+    }
+
+    private String replacePlayer(String msg, Player p) {
+        return msg.replace("%player%", p.getName());
+    }
+
+    private String colorize(String s) {
+        return ChatColor.translateAlternateColorCodes('&', s);
     }
 }

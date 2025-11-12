@@ -14,20 +14,20 @@ public class CraftCommand implements CommandExecutor {
                              @NotNull String label, @NotNull String[] args) {
 
         if (!(sender instanceof Player)) {
-            LowCore.sendConfigMessage(sender, "messages.player-only");
+            LowCore.sendConfigMessage(sender, "player-only");
             return true;
         }
 
         Player player = (Player) sender;
 
         if (!player.hasPermission("lowcore.craft")) {
-            LowCore.sendConfigMessage(player, "messages.no-permission");
+            LowCore.sendConfigMessage(player, "no-permission");
             return true;
         }
 
         player.openWorkbench(null, true);
 
-        LowCore.sendConfigMessage(player, "messages.craft-opened");
+        LowCore.sendConfigMessage(player, "craft-opened");
         return true;
     }
 }
