@@ -86,6 +86,9 @@ public class LowCore extends JavaPlugin {
         GodCommand godCommand = new GodCommand();
         Objects.requireNonNull(getCommand("god")).setExecutor(godCommand);
 
+        KillAllCommand killAllCommand = new KillAllCommand();
+        Objects.requireNonNull(getCommand("killall")).setExecutor(killAllCommand);
+        Objects.requireNonNull(getCommand("killall")).setTabCompleter(killAllCommand);
     }
 
     @Override

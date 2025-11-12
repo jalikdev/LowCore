@@ -90,6 +90,11 @@ commands:
     usage: /god
     permission: lowcore.god
 
+  killall:
+    description: Kill all mobs, specific types, or types in a radius.
+    usage: /killall [type] [radius]
+    permission: lowcore.killall
+
 permissions:
   lowcore.command:
     description: Use /lowcore

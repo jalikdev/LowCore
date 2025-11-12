@@ -72,21 +72,31 @@ public class LowcoreCommand implements CommandExecutor, TabCompleter {
     private void sendMainHelp(CommandSender sender) {
         LowCore.sendMessage(sender, "&8&m-------------------------------");
         LowCore.sendMessage(sender, "&aLowCore &7Command Overview:");
+
         LowCore.sendMessage(sender, "&a/lowcore help &7- Show this help.");
-        LowCore.sendMessage(sender, "&a/lowcore help <command> &7- Detailed help for a specific command.");
         LowCore.sendMessage(sender, "&a/lowcore info &7- Plugin information.");
-        LowCore.sendMessage(sender, "&a/lowcore reload &7- Reload the config (Admins only).");
+        LowCore.sendMessage(sender, "&a/lowcore reload &7- Reload the config.");
+
         LowCore.sendMessage(sender, "&a/ec &7- Open your ender chest.");
-        LowCore.sendMessage(sender, "&a/enchant &7- Advanced enchanting and item renaming.");
-        LowCore.sendMessage(sender, "&a/feed &7- Feed yourself or another player.");
+        LowCore.sendMessage(sender, "&a/enchant &7- Advanced enchanting / renaming.");
+        LowCore.sendMessage(sender, "&a/feed &7- Feed yourself or others.");
         LowCore.sendMessage(sender, "&a/fly &7- Toggle flight.");
         LowCore.sendMessage(sender, "&a/gm &7- Change your gamemode.");
         LowCore.sendMessage(sender, "&a/hat &7- Put the held item on your head.");
         LowCore.sendMessage(sender, "&a/heal &7- Heal yourself or another player.");
-        LowCore.sendMessage(sender, "&a/invsee &7- View and live-sync another player's inventory.");
-        LowCore.sendMessage(sender, "&a/spawnmob &7- Spawn mobs where you are looking.");
+        LowCore.sendMessage(sender, "&a/invsee &7- View another player's inventory.");
+        LowCore.sendMessage(sender, "&a/spawnmob &7- Spawn mobs where you look.");
+        LowCore.sendMessage(sender, "&a/anvil &7- Open an anvil GUI.");
+        LowCore.sendMessage(sender, "&a/repair &7- Repair your item or inventory.");
+        LowCore.sendMessage(sender, "&a/craft &7- Open a workbench.");
+        LowCore.sendMessage(sender, "&a/vanish &7- Toggle vanish mode.");
+        LowCore.sendMessage(sender, "&a/speed &7- Set walk/fly speed.");
+        LowCore.sendMessage(sender, "&a/god &7- Toggle invulnerability.");
+        LowCore.sendMessage(sender, "&a/killall &7- Kill all mobs or by type/radius.");
+
         LowCore.sendMessage(sender, "&8&m-------------------------------");
     }
+
 
     private void sendDetailedHelp(CommandSender sender, String topic) {
         switch (topic) {
@@ -148,6 +158,42 @@ public class LowcoreCommand implements CommandExecutor, TabCompleter {
                 LowCore.sendMessage(sender, "&a/enchant resetname &7- Reset the custom name of the held item.");
                 LowCore.sendMessage(sender, "&7Without bypass: only compatible enchants and vanilla max levels.");
                 LowCore.sendMessage(sender, "&7With &alowcore.enchant.bypass&7: unsafe up to 255, incompatible allowed (with warning).");
+                break;
+
+            case "speed":
+                LowCore.sendMessage(sender, "&a/speed <1-10>");
+                LowCore.sendMessage(sender, "&7Sets your fly/walk speed depending on your state.");
+                break;
+
+            case "god":
+                LowCore.sendMessage(sender, "&a/god");
+                LowCore.sendMessage(sender, "&7Toggle invulnerability for yourself.");
+                break;
+
+            case "anvil":
+                LowCore.sendMessage(sender, "&a/anvil");
+                LowCore.sendMessage(sender, "&7Open a virtual anvil.");
+                break;
+
+            case "repair":
+                LowCore.sendMessage(sender, "&a/repair &7- Repair held item.");
+                LowCore.sendMessage(sender, "&a/repair all &7- Repair entire inventory.");
+                break;
+
+            case "craft":
+                LowCore.sendMessage(sender, "&a/craft &7- Open a virtual crafting table.");
+                LowCore.sendMessage(sender, "&a/workbench &7- Alias for /craft.");
+                break;
+
+            case "vanish":
+                LowCore.sendMessage(sender, "&a/vanish");
+                LowCore.sendMessage(sender, "&7Become invisible (entity + tab list), fake join/quit.");
+                break;
+
+            case "killall":
+                LowCore.sendMessage(sender, "&a/killall &7- Kill all mobs in the world.");
+                LowCore.sendMessage(sender, "&a/killall <type> &7- Kill specific mob type.");
+                LowCore.sendMessage(sender, "&a/killall <type> <radius> &7- Kill only mobs of that type near you.");
                 break;
 
             default:
