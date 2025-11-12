@@ -1,0 +1,44 @@
+package org.jalikdev.lowCore.commands;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jalikdev.lowCore.LowCore;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
+public class GodCommand implements CommandExecutor {
+
+    private final Set<UUID> godMode = new HashSet<>();
+
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
+                             @NotNull String label, @NotNull String[] args) {
+
+        if (!(sender instanceof Player)) {
+            LowCore.sendConfigMessage(sender, "player-only");
+            return true;
+        }
+        Player player = (Player) sender;
+
+        if (!player.hasPermission("lowcore.god")) {
+            LowCore.sendConfigMessage(player, "no-permission");
+            return true;
+        }
+
+        if (godMode.contains(player.getUniqueId())) {
+            godMode.remove(player.getUniqueId());
+            player.setInvulnerable(false);
+            LowCore.sendConfigMessage(player, "godmode.disabled");
+        } else {
+            godMode.add(player.getUniqueId());
+            player.setInvulnerable(true);
+            LowCore.sendConfigMessage(player, "godmode.enabled");
+        }
+        return true;
+    }
+}

@@ -85,6 +85,11 @@ commands:
     usage: /speed <1-10>
     permission: lowcore.speed
 
+  god:
+    description: Toggle god mode (invulnerability).
+    usage: /god
+    permission: lowcore.god
+
 permissions:
   lowcore.command:
     description: Use /lowcore

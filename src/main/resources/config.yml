@@ -135,3 +135,11 @@ vanish:
   fake-quit: "&e%player% left the game"
   fake-join: "&e%player% joined the game"
 
+# ======================
+# GodMode
+# ======================
+godmode:
+  messages:
+    disabled: "&eGod mode disabled."
+    enabled: "&aGod mode enabled"
+
