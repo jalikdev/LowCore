@@ -3,20 +3,7 @@ package org.jalikdev.lowCore;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jalikdev.lowCore.commands.FlyCommand;
-import org.jalikdev.lowCore.commands.GmCommand;
-import org.jalikdev.lowCore.commands.LowcoreCommand;
-import org.jalikdev.lowCore.commands.EcCommand;
-import org.jalikdev.lowCore.commands.InvseeCommand;
-import org.jalikdev.lowCore.commands.HatCommand;
-import org.jalikdev.lowCore.commands.FeedCommand;
-import org.jalikdev.lowCore.commands.HealCommand;
-import org.jalikdev.lowCore.commands.SpawnMobCommand;
-import org.jalikdev.lowCore.commands.EnchantCommand;
-import org.jalikdev.lowCore.commands.AnvilCommand;
-import org.jalikdev.lowCore.commands.RepairCommand;
-import org.jalikdev.lowCore.commands.CraftCommand;
-import org.jalikdev.lowCore.commands.VanishCommand;
+import org.jalikdev.lowCore.commands.*;
 
 import java.util.Objects;
 
@@ -92,6 +79,9 @@ public class LowCore extends JavaPlugin {
         VanishCommand vanishCommand = new VanishCommand(this);
         Objects.requireNonNull(getCommand("vanish")).setExecutor(vanishCommand);
         getServer().getPluginManager().registerEvents(vanishCommand, this);
+
+        SpeedCommand speedCommand = new SpeedCommand();
+        Objects.requireNonNull(getCommand("speed")).setExecutor(speedCommand);
 
     }
 

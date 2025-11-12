@@ -80,6 +80,10 @@ commands:
     usage: /vanish
     permission: lowcore.vanish
 
+  speed:
+    description: Change your walk or fly speed (1-10).
+    usage: /speed <1-10>
+    permission: lowcore.speed
 
 permissions:
   lowcore.command:
