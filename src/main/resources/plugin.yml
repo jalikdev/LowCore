@@ -4,11 +4,16 @@ main: org.jalikdev.lowCore.LowCore
 api-version: '1.21'
 author: 'jan'
 
+# -------------------------------------------------
+# COMMANDS
+# -------------------------------------------------
 commands:
+
   lowcore:
     description: Main command for LowCore
     usage: /lowcore
     permission: lowcore.command
+    aliases: [lc]
 
   fly:
     description: Toggles flight
@@ -19,11 +24,13 @@ commands:
     description: Changes gamemode
     usage: /gm
     permission: lowcore.gm
+    aliases: [gamemode]
 
   ec:
     description: Open your ender chest or another player's
     usage: /ec [player]
     permission: lowcore.ec
+    aliases: [enderchest]
 
   invsee:
     description: View another player's inventory
@@ -34,6 +41,7 @@ commands:
     description: Put the item in your hand on your head
     usage: /hat [player]
     permission: lowcore.hat
+    aliases: [head]
 
   heal:
     description: Heal yourself or others
@@ -49,59 +57,68 @@ commands:
     description: Spawn a Mob
     usage: /spawnmob <mob> [amount]
     permission: lowcore.spawnmob
+    aliases: [spawnentity, summonmob]
 
   enchant:
-    description: Enchant and modify items.
-    usage: /enchant <enchant> [level] | /enchant remove <enchant> | /enchant clear | /enchant name <name> | /enchant resetname
+    description: Enchant and modify items
+    usage: /enchant <...>
     permission: lowcore.enchant
 
   anvil:
-    description: Opens an anvil interface.
+    description: Opens an anvil interface
     usage: /anvil
     permission: lowcore.anvil
 
   repair:
-    description: Repairs your held item or all items.
+    description: Repairs your held item or all items
     usage: /repair [all]
     permission: lowcore.repair
 
   craft:
-    description: Opens a crafting table.
+    description: Opens a crafting table
     usage: /craft
     permission: lowcore.craft
-
-  workbench:
-    description: Alias for /craft
-    usage: /workbench
-    permission: lowcore.craft
+    aliases: [workbench]
 
   vanish:
-    description: Toggle vanish mode (hidden from players & tab, fake leave/join).
+    description: Toggle vanish mode
     usage: /vanish
     permission: lowcore.vanish
+    aliases: [v]
 
   speed:
-    description: Change your walk or fly speed (1-10).
+    description: Change your walk or fly speed
     usage: /speed <1-10>
     permission: lowcore.speed
 
   god:
-    description: Toggle god mode (invulnerability).
+    description: Toggle god mode
     usage: /god
     permission: lowcore.god
+    aliases: [invincibility]
 
   killall:
-    description: Kill all mobs, specific types, or types in a radius.
+    description: Kill mobs globally or in a radius
     usage: /killall [type] [radius]
     permission: lowcore.killall
+    aliases: [killmob]
 
   log:
-    description: View recent admin actions (LowCore commands).
+    description: View recent admin actions
     usage: /log [amount]
     permission: lowcore.log
 
+  performance:
+    description: Show server performance
+    usage: /performance
+    permission: lowcore.performance
+    aliases: [perf, tps]
 
+# -------------------------------------------------
+# PERMISSIONS
+# -------------------------------------------------
 permissions:
+
   lowcore.command:
     description: Use /lowcore
     default: op
@@ -115,21 +132,21 @@ permissions:
     default: op
 
   lowcore.ec:
-    description: Open own ender chest
+    description: Open your ender chest
     default: op
   lowcore.ec.others:
     description: Open others' ender chests
     default: op
 
   lowcore.invsee:
-    description: View other players' inventories
+    description: View inventories
     default: op
 
   lowcore.hat:
     description: Use /hat on yourself
     default: true
   lowcore.hat.others:
-    description: Use /hat on other players
+    description: Use /hat on others
     default: op
 
   lowcore.heal:
@@ -147,9 +164,13 @@ permissions:
     default: op
 
   lowcore.spawnmob:
-    description: Spawn a Mob
+    description: Spawn mobs
     default: op
 
   lowcore.enchant:
-    description: Enchant items etc.
+    description: Enchant items
+    default: op
+
+  lowcore.performance:
+    description: Use /performance
     default: op

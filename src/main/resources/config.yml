@@ -44,6 +44,12 @@ join-quit-messages:
   join: "&a+ &7%player%"
   quit: "&c- &7%player%"
 
+# Configure the message of the Day
+motd:
+  enabled: true
+  line-1: "&aLowCore &7| &fVanilla+ SMP"
+  line-2: "&7Online: &a%online%&7/&a%max% &7| v%version%"
+
 # General config messages
 messages:
   reload: "&aLowCore config reloaded!"
@@ -157,3 +163,11 @@ update-checker:
   enebled: true
   notify: true
   notify-players-with-permission: true
+
+# ======================
+# Performance
+# ======================
+performance:
+  enabled: true
+  show-mspt: true
+  show-chunks: true
