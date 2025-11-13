@@ -71,6 +71,7 @@ public class LowCore extends JavaPlugin {
 
         RepairCommand repairCommand = new RepairCommand();
         Objects.requireNonNull(getCommand("repair")).setExecutor(repairCommand);
+        Objects.requireNonNull(getCommand("repair")).setTabCompleter(repairCommand);
 
         CraftCommand craftCommand = new CraftCommand();
         Objects.requireNonNull(getCommand("craft")).setExecutor(craftCommand);

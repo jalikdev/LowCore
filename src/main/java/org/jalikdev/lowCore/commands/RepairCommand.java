@@ -3,6 +3,7 @@ package org.jalikdev.lowCore.commands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -10,8 +11,12 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jalikdev.lowCore.LowCore;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class RepairCommand implements CommandExecutor {
+import java.util.Collections;
+import java.util.List;
+
+public class RepairCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
@@ -43,7 +48,7 @@ public class RepairCommand implements CommandExecutor {
             return true;
         }
 
-        if (args[0].equalsIgnoreCase("all")) {
+        if (args.length == 1 && args[0].equalsIgnoreCase("all")) {
             int repaired = 0;
 
             for (ItemStack item : inv.getContents()) {
@@ -56,28 +61,39 @@ public class RepairCommand implements CommandExecutor {
             return true;
         }
 
-        LowCore.sendMessage(player, "&cUsage: /repair [all]");
+        LowCore.sendMessage(player, "&cUsage: &e/repair &7or &e/repair all");
         return true;
     }
 
     private boolean repairItem(ItemStack item) {
-        if (item == null || item.getType().isAir()) {
-            return false;
-        }
+        if (item == null || item.getType().isAir()) return false;
 
         ItemMeta meta = item.getItemMeta();
-        if (!(meta instanceof Damageable)) {
-            return false;
-        }
+        if (!(meta instanceof Damageable)) return false;
 
         Damageable damageable = (Damageable) meta;
-        if (damageable.getDamage() <= 0) {
-            return false;
-        }
+        if (damageable.getDamage() <= 0) return false;
 
         damageable.setDamage(0);
         item.setItemMeta(meta);
         return true;
     }
-}
 
+    @Nullable
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
+                                      @NotNull String alias, @NotNull String[] args) {
+
+        if (!sender.hasPermission("lowcore.repair")) {
+            return Collections.emptyList();
+        }
+
+        if (args.length == 1) {
+            if ("all".startsWith(args[0].toLowerCase())) {
+                return Collections.singletonList("all");
+            }
+        }
+
+        return Collections.emptyList();
+    }
+}
