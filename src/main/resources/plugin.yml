@@ -95,6 +95,12 @@ commands:
     usage: /killall [type] [radius]
     permission: lowcore.killall
 
+  log:
+    description: View recent admin actions (LowCore commands).
+    usage: /log [amount]
+    permission: lowcore.log
+
+
 permissions:
   lowcore.command:
     description: Use /lowcore
@@ -147,8 +153,3 @@ permissions:
   lowcore.enchant:
     description: Enchant items etc.
     default: op
-
-  log:
-    description: View recent admin actions (LowCore commands).
-    usage: /log [amount]
-    permission: lowcore.log
