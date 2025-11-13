@@ -82,6 +82,7 @@ public class LowCore extends JavaPlugin {
 
         SpeedCommand speedCommand = new SpeedCommand();
         Objects.requireNonNull(getCommand("speed")).setExecutor(speedCommand);
+        Objects.requireNonNull(getCommand("speed")).setTabCompleter(speedCommand);
 
         GodCommand godCommand = new GodCommand();
         Objects.requireNonNull(getCommand("god")).setExecutor(godCommand);
