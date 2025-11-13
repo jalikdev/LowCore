@@ -38,6 +38,12 @@
 # Command Output prefix
 prefix: "&8[&aLowCore&8] &7" # leave a Space at the end
 
+# Configure Join and Quit messages
+join-quit-messages:
+  enabled: true
+  join: "&a+ &7%player%"
+  quit: "&c- &7%player%"
+
 # General config messages
 messages:
   reload: "&aLowCore config reloaded!"
@@ -133,8 +139,8 @@ vanish:
   messages:
     enabled: "&aYou are now vanished."
     disabled: "&eYou are now visible."
-    fake-quit: "&e%player% left the game"
-    fake-join: "&e%player% joined the game"
+    fake-join: "&a+ &7%player%"
+    fake-quit: "&c- &7%player%"
 
 # ======================
 # GodMode
@@ -144,3 +150,10 @@ godmode:
     disabled: "&eGod mode disabled."
     enabled: "&aGod mode enabled"
 
+# ======================
+# GodMode
+# ======================
+update-checker:
+  enebled: true
+  notify: true
+  notify-players-with-permission: true

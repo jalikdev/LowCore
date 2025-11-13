@@ -3,6 +3,8 @@ package org.jalikdev.lowCore;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jalikdev.lowCore.UpdateChecker;
+import org.jalikdev.lowCore.listeners.JoinQuitListener;
 import org.jalikdev.lowCore.commands.*;
 
 import java.util.Objects;
@@ -13,6 +15,9 @@ public class LowCore extends JavaPlugin {
 
     private static LowCore instance;
     private String prefix;
+
+    private boolean updateAvailable = false;
+    private String latestVersion = null;
 
     public static LowCore getInstance() {
         return instance;
@@ -96,6 +101,13 @@ public class LowCore extends JavaPlugin {
         Objects.requireNonNull(getCommand("log")).setExecutor(logCommand);
         Objects.requireNonNull(getCommand("log")).setTabCompleter(logCommand);
         getServer().getPluginManager().registerEvents(logCommand, this);
+
+        if (getConfig().getBoolean("update-checker.enabled", true)) {
+            new UpdateChecker(this).checkForUpdates();
+        }
+
+        getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
+
     }
 
     @Override
@@ -177,4 +189,21 @@ public class LowCore extends JavaPlugin {
         sendConfigMessage(sender, "reload");
         getLogger().info("Configuration reloaded by " + sender.getName());
     }
+
+    public boolean isUpdateAvailable() {
+        return updateAvailable;
+    }
+
+    public void setUpdateAvailable(boolean updateAvailable) {
+        this.updateAvailable = updateAvailable;
+    }
+
+    public String getLatestVersion() {
+        return latestVersion;
+    }
+
+    public void setLatestVersion(String latestVersion) {
+        this.latestVersion = latestVersion;
+    }
+
 }

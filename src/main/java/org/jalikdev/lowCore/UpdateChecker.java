@@ -1,0 +1,119 @@
+package org.jalikdev.lowCore;
+
+import org.bukkit.Bukkit;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.logging.Logger;
+
+public class UpdateChecker {
+
+    private final LowCore plugin;
+    private final Logger logger;
+
+    private static final String API_URL = "https://api.github.com/repos/jalikdev/LowCore/releases/latest";
+
+    public UpdateChecker(LowCore plugin) {
+        this.plugin = plugin;
+        this.logger = plugin.getLogger();
+    }
+
+    public void checkForUpdates() {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            String currentVersion = plugin.getDescription().getVersion();
+
+            try {
+                HttpURLConnection connection = (HttpURLConnection) new URL(API_URL).openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("User-Agent", "LowCore-UpdateChecker");
+                connection.setConnectTimeout(5000);
+                connection.setReadTimeout(5000);
+
+                int responseCode = connection.getResponseCode();
+                if (responseCode != 200) {
+                    logger.warning("Could not check for updates: HTTP " + responseCode);
+                    return;
+                }
+
+                StringBuilder sb = new StringBuilder();
+                try (BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
+                }
+
+                String json = sb.toString();
+                String latestVersion = parseTagName(json);
+                if (latestVersion == null || latestVersion.isEmpty()) {
+                    logger.warning("Could not parse latest version from GitHub response.");
+                    return;
+                }
+
+                if (latestVersion.startsWith("v")) {
+                    latestVersion = latestVersion.substring(1);
+                }
+
+                if (isNewerVersion(latestVersion, currentVersion)) {
+                    plugin.setUpdateAvailable(true);
+                    plugin.setLatestVersion(latestVersion);
+
+                    if (plugin.getConfig().getBoolean("update-checker.notify-console", true)) {
+                        logger.info("============================================");
+                        logger.info("A new version of LowCore is available!");
+                        logger.info("Current version: " + currentVersion);
+                        logger.info("Latest version:  " + latestVersion);
+                        logger.info("Download: https://github.com/jalikdev/LowCore/releases");
+                        logger.info("============================================");
+                    }
+                } else {
+                    logger.info("LowCore is up to date (version " + currentVersion + ").");
+                }
+
+            } catch (Exception e) {
+                logger.warning("Error while checking for updates: " + e.getMessage());
+            }
+        });
+    }
+
+
+    private String parseTagName(String json) {
+        String marker = "\"tag_name\":\"";
+        int index = json.indexOf(marker);
+        if (index == -1) return null;
+
+        int start = index + marker.length();
+        int end = json.indexOf('"', start);
+        if (end == -1) return null;
+
+        return json.substring(start, end);
+    }
+
+
+    private boolean isNewerVersion(String latest, String current) {
+        String[] latestParts = latest.split("\\.");
+        String[] currentParts = current.split("\\.");
+
+        int max = Math.max(latestParts.length, currentParts.length);
+        for (int i = 0; i < max; i++) {
+            int latestNum = i < latestParts.length ? parseIntSafe(latestParts[i]) : 0;
+            int currentNum = i < currentParts.length ? parseIntSafe(currentParts[i]) : 0;
+
+            if (latestNum > currentNum) return true;
+            if (latestNum < currentNum) return false;
+        }
+        return false;
+    }
+
+    private int parseIntSafe(String part) {
+        try {
+            return Integer.parseInt(part);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+}
