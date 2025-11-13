@@ -91,6 +91,11 @@ public class LowCore extends JavaPlugin {
         KillAllCommand killAllCommand = new KillAllCommand();
         Objects.requireNonNull(getCommand("killall")).setExecutor(killAllCommand);
         Objects.requireNonNull(getCommand("killall")).setTabCompleter(killAllCommand);
+
+        LogCommand logCommand = new LogCommand(this);
+        Objects.requireNonNull(getCommand("log")).setExecutor(logCommand);
+        Objects.requireNonNull(getCommand("log")).setTabCompleter(logCommand);
+        getServer().getPluginManager().registerEvents(logCommand, this);
     }
 
     @Override
