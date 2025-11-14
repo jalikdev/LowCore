@@ -6,6 +6,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jalikdev.lowCore.UpdateChecker;
 import org.jalikdev.lowCore.listeners.JoinQuitListener;
 import org.jalikdev.lowCore.commands.*;
+import org.jalikdev.lowCore.listeners.MotdListener;
+import org.jalikdev.lowCore.commands.PerformanceCommand;
 
 import java.util.Objects;
 
@@ -101,6 +103,12 @@ public class LowCore extends JavaPlugin {
         Objects.requireNonNull(getCommand("log")).setExecutor(logCommand);
         Objects.requireNonNull(getCommand("log")).setTabCompleter(logCommand);
         getServer().getPluginManager().registerEvents(logCommand, this);
+
+        getServer().getPluginManager().registerEvents(new MotdListener(this), this);
+
+        PerformanceCommand performanceCommand = new PerformanceCommand(this);
+        Objects.requireNonNull(getCommand("performance")).setExecutor(performanceCommand);
+        Objects.requireNonNull(getCommand("performance")).setTabCompleter(performanceCommand);
 
         if (getConfig().getBoolean("update-checker.enabled", true)) {
             new UpdateChecker(this).checkForUpdates();
