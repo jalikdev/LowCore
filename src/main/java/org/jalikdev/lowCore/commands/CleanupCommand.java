@@ -51,14 +51,34 @@ public class CleanupCommand implements CommandExecutor, TabCompleter, Listener {
         return true;
     }
 
+    private ItemStack createFiller() {
+        ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(" ");
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    private void fillEmptySlots(Inventory inv) {
+        ItemStack filler = createFiller();
+        for (int i = 0; i < inv.getSize(); i++) {
+            if (inv.getItem(i) == null || inv.getItem(i).getType() == Material.AIR) {
+                inv.setItem(i, filler);
+            }
+        }
+    }
+
+
     private void openMainGUI(Player player) {
         Inventory inv = Bukkit.createInventory(null, 27, "§aLag Cleanup");
 
-        inv.setItem(10, createBtn(Material.BARRIER, "§cRemove Items", "§7Remove all dropped items."));
-        inv.setItem(11, createBtn(Material.EXPERIENCE_BOTTLE, "§eRemove XP Orbs", "§7Remove all XP orbs."));
-        inv.setItem(12, createBtn(Material.OAK_BOAT, "§bRemove Boats/Minecarts", "§7Remove all riding vehicles."));
+        inv.setItem(11, createBtn(Material.BARRIER, "§cRemove Items", "§7Remove all dropped items."));
+        inv.setItem(12, createBtn(Material.EXPERIENCE_BOTTLE, "§eRemove XP Orbs", "§7Remove all XP orbs."));
+        inv.setItem(13, createBtn(Material.OAK_BOAT, "§bRemove Boats/Minecarts", "§7Remove all riding vehicles."));
         inv.setItem(14, createBtn(Material.ZOMBIE_HEAD, "§cRemove Hostile Mobs", "§7Remove all hostile creatures."));
         inv.setItem(15, createBtn(Material.COW_SPAWN_EGG, "§aRemove Passive Mobs", "§7Remove all passive creatures."));
+
+        fillEmptySlots(inv);
 
         player.openInventory(inv);
     }

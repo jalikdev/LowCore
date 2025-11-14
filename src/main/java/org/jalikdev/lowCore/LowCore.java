@@ -110,6 +110,12 @@ public class LowCore extends JavaPlugin {
         Objects.requireNonNull(getCommand("performance")).setExecutor(performanceCommand);
         Objects.requireNonNull(getCommand("performance")).setTabCompleter(performanceCommand);
 
+        CleanupCommand cleanupCommand = new CleanupCommand(this);
+        Objects.requireNonNull(getCommand("cleanup")).setExecutor(cleanupCommand);
+        Objects.requireNonNull(getCommand("cleanup")).setTabCompleter(cleanupCommand);
+        getServer().getPluginManager().registerEvents(cleanupCommand, this);
+
+
         if (getConfig().getBoolean("update-checker.enabled", true)) {
             new UpdateChecker(this).checkForUpdates();
         }
