@@ -19,7 +19,6 @@ public class JoinQuitListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-
         if (plugin.getConfig().getBoolean("join-quit-messages.enabled", true)) {
             String raw = plugin.getConfig().getString("join-quit-messages.join", "&a+ &7%player%");
             raw = raw.replace("%player%", player.getName());

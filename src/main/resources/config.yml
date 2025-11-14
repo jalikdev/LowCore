@@ -157,3 +157,10 @@ update-checker:
   enebled: true
   notify: true
   notify-players-with-permission: true
+
+# ======================
+# Clean Up
+# ======================
+lag-cleanup:
+  enabled: true
+  confirm-required: true
