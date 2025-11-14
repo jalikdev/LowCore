@@ -55,7 +55,7 @@ public class VanishCommand implements CommandExecutor, Listener {
 
             player.sendMessage(colorize(plugin.getPrefix() + getCfg("vanish.disabled", "&eYou are now visible.")));
 
-            Bukkit.broadcastMessage(replacePlayer(colorize(getCfg("vanish.fake-join", "&e%player% joined the game")), player));
+            Bukkit.broadcastMessage (replacePlayer(colorize(getCfg("vanish.messages.fake-join", "+ %player%")), player));
         } else {
             vanished.add(player.getUniqueId());
 
@@ -71,7 +71,7 @@ public class VanishCommand implements CommandExecutor, Listener {
 
             player.sendMessage(colorize(plugin.getPrefix() + getCfg("vanish.enabled", "&aYou are now vanished.")));
 
-            Bukkit.broadcastMessage(replacePlayer(colorize(getCfg("vanish.fake-quit", "&e%player% left the game")), player));
+            Bukkit.broadcastMessage(replacePlayer(colorize(getCfg("vanish.messages.fake-quit", "- %player%")), player));
         }
 
         return true;

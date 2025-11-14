@@ -47,7 +47,7 @@ join-quit-messages:
 # Configure the message of the Day
 motd:
   enabled: true
-  line-1: "&aLowCore &7| &fVanilla+ SMP"
+  line-1: "&aLowCore"
   line-2: "&7Online: &a%online%&7/&a%max% &7| v%version%"
 
 # General config messages
