@@ -91,6 +91,8 @@ public class CleanupCommand implements CommandExecutor, TabCompleter, Listener {
 
         player.setMetadata("cleanup-type", new org.bukkit.metadata.FixedMetadataValue(plugin, type));
 
+        fillEmptySlots(inv);
+
         player.openInventory(inv);
     }
 
