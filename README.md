@@ -86,15 +86,6 @@
 
 ---
 
-## 🧱 Tech Stack
-
-- ☕ Java **21+**
-- 🔧 Paper / Spigot **1.21.1+**
-- 🧩 Maven project
-- 💻 Developed using IntelliJ IDEA
-
----
-
 ## 🧾 License
 
 This project is licensed under the [MIT License](LICENSE).

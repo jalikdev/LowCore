@@ -8,6 +8,7 @@ import org.jalikdev.lowCore.listeners.JoinQuitListener;
 import org.jalikdev.lowCore.commands.*;
 import org.jalikdev.lowCore.listeners.MotdListener;
 import org.jalikdev.lowCore.commands.PerformanceCommand;
+import org.jalikdev.lowCore.performance.*;
 
 import java.util.Objects;
 
@@ -20,6 +21,8 @@ public class LowCore extends JavaPlugin {
 
     private boolean updateAvailable = false;
     private String latestVersion = null;
+
+    private PerformanceMonitor performanceMonitor;
 
     public static LowCore getInstance() {
         return instance;
@@ -122,10 +125,15 @@ public class LowCore extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
 
+        performanceMonitor = new PerformanceMonitor(this);
+        performanceMonitor.start();
     }
 
     @Override
     public void onDisable() {
+        if (performanceMonitor != null) {
+            performanceMonitor.stop();
+        }
         getLogger().info("LowCore plugin disabled.");
     }
 

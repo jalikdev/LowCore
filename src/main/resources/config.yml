@@ -179,3 +179,14 @@ performance:
 lag-cleanup:
   enabled: true
   confirm-required: true
+
+# ======================
+# Performance
+# ======================
+performance-monitor:
+  enabled: true
+  warn-tps: 18.0
+  severe-tps: 15.0
+  check-interval-seconds: 10
+  cooldown-seconds: 60
+
