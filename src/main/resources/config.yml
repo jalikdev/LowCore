@@ -106,6 +106,7 @@ spawnmob:
     - WITHER
     - ENDER_DRAGON
     - WARDEN
+    - IRON_GOLEM
   # role to spawn these restricted mobs
   restricted-permission: "lowcore.spawnmob.restricted"
 
@@ -171,7 +172,6 @@ performance:
   enabled: true
   show-mspt: true
   show-chunks: true
-
 
 # ======================
 # Clean Up
