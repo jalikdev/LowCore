@@ -1,4 +1,4 @@
-package org.jalikdev.lowCore.commands;
+package dev.jalikdev.lowCore.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jalikdev.lowCore.LowCore;
+import dev.jalikdev.lowCore.LowCore;
 
 import java.util.Arrays;
 import java.util.Collections;

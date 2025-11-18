@@ -1,10 +1,10 @@
-package org.jalikdev.lowCore.commands;
+package dev.jalikdev.lowCore.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jalikdev.lowCore.LowCore;
+import dev.jalikdev.lowCore.LowCore;
 
 public class FlyCommand implements CommandExecutor {
 

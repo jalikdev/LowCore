@@ -8,12 +8,12 @@
  import org.bukkit.command.CommandSender;[m
 [32m+[m[32mimport org.bukkit.command.CommandMap;[m
  import org.bukkit.plugin.java.JavaPlugin;[m
- import org.jalikdev.lowCore.commands.FlyCommand;[m
- import org.jalikdev.lowCore.commands.GmCommand;[m
-[36m@@ -9,37 +10,52 @@[m [mimport org.jalikdev.lowCore.commands.LowcoreCommand;[m
- import org.jalikdev.lowCore.commands.EcCommand;[m
- import org.jalikdev.lowCore.commands.InvseeCommand;[m
- import org.jalikdev.lowCore.commands.HatCommand;[m
+ import commands.dev.jalikdev.lowCore.FlyCommand;[m
+ import commands.dev.jalikdev.lowCore.GmCommand;[m
+[36m@@ -9,37 +10,52 @@[m [mimport commands.dev.jalikdev.lowCore.LowcoreCommand;[m
+ import commands.dev.jalikdev.lowCore.EcCommand;[m
+ import commands.dev.jalikdev.lowCore.InvseeCommand;[m
+ import commands.dev.jalikdev.lowCore.HatCommand;[m
 [32m+[m
 [32m+[m[32mimport java.lang.reflect.Field;[m
  import java.util.Objects;[m
@@ -219,7 +219,7 @@
  import org.bukkit.command.TabCompleter;[m
  import org.jetbrains.annotations.NotNull;[m
  import org.jetbrains.annotations.Nullable;[m
-[32m+[m[32mimport org.jalikdev.lowCore.LowCore;[m
+[32m+[m[32mimport dev.jalikdev.lowCore.LowCore;[m
  [m
  import java.util.ArrayList;[m
  import java.util.Arrays;[m

@@ -1,4 +1,4 @@
-package org.jalikdev.lowCore.commands;
+package dev.jalikdev.lowCore.commands;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -11,7 +11,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
-import org.jalikdev.lowCore.LowCore;
+import dev.jalikdev.lowCore.LowCore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

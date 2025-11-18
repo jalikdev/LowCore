@@ -1,13 +1,13 @@
-package org.jalikdev.lowCore;
+package dev.jalikdev.lowCore;
 
+import dev.jalikdev.lowCore.commands.*;
+import dev.jalikdev.lowCore.performance.PerformanceMonitor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jalikdev.lowCore.UpdateChecker;
-import org.jalikdev.lowCore.listeners.JoinQuitListener;
+import dev.jalikdev.lowCore.listeners.JoinQuitListener;
 import org.jalikdev.lowCore.commands.*;
-import org.jalikdev.lowCore.listeners.MotdListener;
-import org.jalikdev.lowCore.commands.PerformanceCommand;
+import dev.jalikdev.lowCore.listeners.MotdListener;
 import org.jalikdev.lowCore.performance.*;
 
 import java.util.Objects;

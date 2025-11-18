@@ -1,9 +1,9 @@
-package org.jalikdev.lowCore.performance;
+package dev.jalikdev.lowCore.performance;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.jalikdev.lowCore.LowCore;
+import dev.jalikdev.lowCore.LowCore;
 
 public class PerformanceMonitor {
 

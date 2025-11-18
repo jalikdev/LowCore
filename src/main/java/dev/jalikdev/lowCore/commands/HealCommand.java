@@ -1,11 +1,11 @@
-package org.jalikdev.lowCore.commands;
+package dev.jalikdev.lowCore.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jalikdev.lowCore.LowCore;
+import dev.jalikdev.lowCore.LowCore;
 import org.jetbrains.annotations.NotNull;
 
 public class HealCommand implements CommandExecutor {

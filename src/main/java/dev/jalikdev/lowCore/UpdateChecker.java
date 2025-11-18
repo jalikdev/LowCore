@@ -1,4 +1,4 @@
-package org.jalikdev.lowCore;
+package dev.jalikdev.lowCore;
 
 import org.bukkit.Bukkit;
 

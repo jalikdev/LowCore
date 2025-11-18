@@ -1,6 +1,6 @@
 name: LowCore
 version: '1.3.0'
-main: org.jalikdev.lowCore.LowCore
+main: dev.jalikdev.lowCore.LowCore
 api-version: '1.21'
 author: 'jan'
 

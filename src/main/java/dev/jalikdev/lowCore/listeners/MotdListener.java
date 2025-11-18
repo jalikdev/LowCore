@@ -1,11 +1,11 @@
-package org.jalikdev.lowCore.listeners;
+package dev.jalikdev.lowCore.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
-import org.jalikdev.lowCore.LowCore;
+import dev.jalikdev.lowCore.LowCore;
 
 public class MotdListener implements Listener {
 
