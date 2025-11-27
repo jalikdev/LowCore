@@ -26,7 +26,6 @@ public class AnvilCommand implements CommandExecutor {
             return true;
         }
 
-        // Open the real anvil GUI
         Location loc = player.getLocation();
         player.openAnvil(loc, true);
 

@@ -6,9 +6,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import dev.jalikdev.lowCore.listeners.JoinQuitListener;
-import org.jalikdev.lowCore.commands.*;
+import dev.jalikdev.lowCore.commands.*;
 import dev.jalikdev.lowCore.listeners.MotdListener;
-import org.jalikdev.lowCore.performance.*;
+import dev.jalikdev.lowCore.performance.*;
 
 import java.util.Objects;
 
