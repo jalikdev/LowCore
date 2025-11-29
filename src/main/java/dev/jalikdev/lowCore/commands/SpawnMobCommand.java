@@ -42,7 +42,7 @@ public class SpawnMobCommand implements CommandExecutor, TabCompleter {
                     return null;
                 }
 
-                Location spawn = lastAir.clone().add(0.5, 0, 0.5);
+                Location spawn = lastAir.clone().add(0, 0, 0);
                 spawn.setYaw(player.getLocation().getYaw());
                 spawn.setPitch(0);
                 return spawn;
@@ -52,7 +52,7 @@ public class SpawnMobCommand implements CommandExecutor, TabCompleter {
         }
 
         if (lastAir != null) {
-            Location spawn = lastAir.clone().add(0.5, 0, 0.5);
+            Location spawn = lastAir.clone().add(0, 0, 0);
             spawn.setYaw(player.getLocation().getYaw());
             spawn.setPitch(0);
             return spawn;
