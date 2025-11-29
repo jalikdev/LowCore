@@ -120,6 +120,13 @@ commands:
     permission: lowcore.performance
     aliases: [perf, tps]
 
+  sudo:
+    description: Execute a command or send a message as another player
+    usage: /sudo <player> <command or message>
+    permission: lowcore.sudo
+    permission-message: §cYou do not have permission to use this command.
+
+
 # -------------------------------------------------
 # PERMISSIONS
 # -------------------------------------------------

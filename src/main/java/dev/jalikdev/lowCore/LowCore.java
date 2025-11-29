@@ -118,6 +118,10 @@ public class LowCore extends JavaPlugin {
         Objects.requireNonNull(getCommand("cleanup")).setTabCompleter(cleanupCommand);
         getServer().getPluginManager().registerEvents(cleanupCommand, this);
 
+        SudoCommand sudoCommand = new SudoCommand();
+        getCommand("sudo").setExecutor(sudoCommand);
+        getCommand("sudo").setTabCompleter(sudoCommand);
+
 
         if (getConfig().getBoolean("update-checker.enabled", true)) {
             new UpdateChecker(this).checkForUpdates();
