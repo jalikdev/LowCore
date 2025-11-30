@@ -13,10 +13,13 @@ import java.util.List;
 
 public class SudoCommand implements CommandExecutor, TabCompleter {
 
+    private final String PERM_BASIC = "lowcore.sudo";
+    private final String PERM_OP_BYPASS = "lowcore.sudo.op";
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (!sender.hasPermission("lowcore.sudo")) {
+        if (!sender.hasPermission(PERM_BASIC)) {
             sender.sendMessage("§cYou do not have permission to use this command.");
             return true;
         }
@@ -30,6 +33,22 @@ public class SudoCommand implements CommandExecutor, TabCompleter {
         if (target == null) {
             sender.sendMessage("§cThat player is not online.");
             return true;
+        }
+
+        if (target.getName().equals(sender.getName())) {
+            sender.sendMessage("§cYou cannot sudo yourself.");
+            return true;
+        }
+
+        if (!sender.hasPermission(PERM_OP_BYPASS)) {
+            if (target.isOp()) {
+                sender.sendMessage("§cYou cannot sudo an operator or a player of equal/higher rank.");
+                return true;
+            }
+            if (target.hasPermission(PERM_OP_BYPASS)) {
+                sender.sendMessage("§cYou cannot sudo a player with a higher rank.");
+                return true;
+            }
         }
 
         String input = String.join(" ", Arrays.copyOfRange(args, 1, args.length));

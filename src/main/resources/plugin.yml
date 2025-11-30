@@ -188,7 +188,13 @@ permissions:
     description: Use /performance
     default: op
 
-
   lowcore.cleanup:
     description: Use the lag cleanup GUI
+    default: op
+
+  lowcore.sudo:
+    description: Make someone say something
+    default: op
+  lowcore.sudo.op:
+    description: All sudo permissions!
     default: op
