@@ -1,17 +1,12 @@
 package dev.jalikdev.lowCore.commands;
 
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import dev.jalikdev.lowCore.LowCore;
-import dev.jalikdev.lowCore.utils.PlayerUtils;
-import dev.jalikdev.lowCore.utils.NBTUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,9 +45,9 @@ public class EcCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        OfflinePlayer targetPlayer = PlayerUtils.getOfflinePlayerRobust(args[0]);
+        Player target = Bukkit.getPlayerExact(args[0]);
 
-        if (targetPlayer == null || (!targetPlayer.hasPlayedBefore() && targetPlayer.getPlayer() == null)) {
+        if (target == null) {
             LowCore.sendConfigMessage(sender, "unknown-player");
             return true;
         }
@@ -63,37 +58,8 @@ public class EcCommand implements CommandExecutor, TabCompleter {
         }
 
         Player viewer = (Player) sender;
-        Player target = targetPlayer.getPlayer();
-
-        Inventory ecInv;
-        String targetName = targetPlayer.getName() != null ? targetPlayer.getName() : targetPlayer.getUniqueId().toString().substring(0, 8);
-
-
-        if (target != null && target.isOnline()) {
-            ecInv = target.getEnderChest();
-            LowCore.sendMessage(sender, "&aOpened &e" + targetName + "&a's ender chest. &7(Live)");
-        } else {
-            try {
-                ecInv = NBTUtils.loadEnderChest(targetPlayer.getUniqueId());
-
-                Location lastLoc = NBTUtils.loadLastLocation(targetPlayer.getUniqueId());
-                if (lastLoc != null) {
-                    LowCore.sendMessage(viewer, "§7Last Pos: §f"
-                            + lastLoc.getWorld().getName() + " §7(§a"
-                            + (int) lastLoc.getX() + ", "
-                            + (int) lastLoc.getY() + ", "
-                            + (int) lastLoc.getZ() + "§7)");
-                }
-
-            } catch (Exception e) {
-                LowCore.sendMessage(viewer, "§cError loading Ender Chest: " + e.getMessage());
-                return true;
-            }
-
-            LowCore.sendMessage(sender, "&aOpened &e" + targetName + "&a's ender chest. &7(Offline)");
-        }
-
-        viewer.openInventory(ecInv);
+        viewer.openInventory(target.getEnderChest());
+        LowCore.sendMessage(sender, "&aOpened &e" + target.getName() + "&a's ender chest.");
         return true;
     }
 

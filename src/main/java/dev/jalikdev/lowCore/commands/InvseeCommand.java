@@ -1,7 +1,6 @@
 package dev.jalikdev.lowCore.commands;
 
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.command.*;
 import org.bukkit.event.EventHandler;
@@ -11,11 +10,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.Location;
 import dev.jalikdev.lowCore.LowCore;
-import dev.jalikdev.lowCore.utils.PlayerUtils;
-import dev.jalikdev.lowCore.utils.NBTUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,33 +61,6 @@ public class InvseeCommand implements CommandExecutor, TabCompleter, Listener {
         inv.setItem(40, tInv.getItemInOffHand());
     }
 
-    private void syncFromOffline(ItemStack[] offlineItems, Inventory inv) {
-        if (offlineItems == null || offlineItems.length < 41) return;
-
-        for (int i = 0; i < 36; i++) {
-            inv.setItem(i, offlineItems[i]);
-        }
-
-        inv.setItem(36, offlineItems[36]);
-        inv.setItem(37, offlineItems[37]);
-        inv.setItem(38, offlineItems[38]);
-        inv.setItem(39, offlineItems[39]);
-        inv.setItem(40, offlineItems[40]);
-    }
-
-    private ItemStack[] syncToOffline(Inventory inv) {
-        ItemStack[] itemsToSave = new ItemStack[41];
-        for (int i = 0; i < 36; i++) {
-            itemsToSave[i] = inv.getItem(i);
-        }
-        itemsToSave[36] = inv.getItem(36);
-        itemsToSave[37] = inv.getItem(37);
-        itemsToSave[38] = inv.getItem(38);
-        itemsToSave[39] = inv.getItem(39);
-        itemsToSave[40] = inv.getItem(40);
-        return itemsToSave;
-    }
-
     private void stopSession(UUID viewerId) {
         InvseeSession s = sessions.remove(viewerId);
         if (s != null) {
@@ -123,73 +91,46 @@ public class InvseeCommand implements CommandExecutor, TabCompleter, Listener {
             return true;
         }
 
-        OfflinePlayer targetPlayer = PlayerUtils.getOfflinePlayerRobust(args[0]);
-
-        if (targetPlayer == null || (!targetPlayer.hasPlayedBefore() && targetPlayer.getPlayer() == null)) {
+        Player target = Bukkit.getPlayerExact(args[0]);
+        if (target == null) {
             LowCore.sendConfigMessage(viewer, "unknown-player");
             return true;
         }
 
-        Player target = targetPlayer.getPlayer();
-
-        if (targetPlayer.getUniqueId().equals(viewer.getUniqueId())) {
+        if (target.getUniqueId().equals(viewer.getUniqueId())) {
             LowCore.sendConfigMessage(viewer, "invsee.self");
             return true;
         }
 
-        String targetName = targetPlayer.getName() != null ? targetPlayer.getName() : targetPlayer.getUniqueId().toString().substring(0, 8);
-        String title = "§8InvSee §7- §a" + targetName;
+        String title = "§8InvSee §7- §a" + target.getName();
         Inventory inv = Bukkit.createInventory(viewer, 45, title);
 
+        syncFromTarget(target, inv);
+
         InvseeSession session = new InvseeSession();
-        session.targetId = targetPlayer.getUniqueId();
+        session.targetId = target.getUniqueId();
         session.inv = inv;
-        session.taskId = -1;
 
-        if (target != null && target.isOnline()) {
-            syncFromTarget(target, inv);
-
-            int taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-                if (!viewer.isOnline()
-                        || viewer.getOpenInventory() == null
-                        || !viewer.getOpenInventory().getTopInventory().equals(inv)) {
-                    stopSession(viewer.getUniqueId());
-                    return;
-                }
-
-                Player t = Bukkit.getPlayer(session.targetId);
-                if (t == null || !t.isOnline()) {
-                    viewer.closeInventory();
-                    LowCore.sendConfigMessage(viewer, "invsee.offline", "target", targetName);
-                    stopSession(viewer.getUniqueId());
-                    return;
-                }
-
-                syncFromTarget(t, inv);
-            }, 0L, 5L);
-
-            session.taskId = taskId;
-        } else {
-            try {
-                ItemStack[] offlineItems = NBTUtils.loadInventory(targetPlayer.getUniqueId());
-                syncFromOffline(offlineItems, inv);
-
-                Location lastLoc = NBTUtils.loadLastLocation(targetPlayer.getUniqueId());
-                if (lastLoc != null) {
-                    LowCore.sendMessage(viewer, "§7Last Pos: §f"
-                            + lastLoc.getWorld().getName() + " §7(§a"
-                            + (int) lastLoc.getX() + ", "
-                            + (int) lastLoc.getY() + ", "
-                            + (int) lastLoc.getZ() + "§7)");
-                } else {
-                    LowCore.sendMessage(viewer, "§7Last Pos: §cUnknown.");
-                }
-            } catch (Exception e) {
-                LowCore.sendMessage(viewer, "§cError loading " + targetName + "'s inventory: " + e.getMessage());
-                return true;
+        int taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+            if (!viewer.isOnline()
+                    || viewer.getOpenInventory() == null
+                    || !viewer.getOpenInventory().getTopInventory().equals(inv)) {
+                stopSession(viewer.getUniqueId());
+                return;
             }
-        }
 
+            Player t = Bukkit.getPlayer(session.targetId);
+            if (t == null || !t.isOnline()) {
+                viewer.closeInventory();
+                LowCore.sendConfigMessage(viewer, "invsee.offline", "target", target.getName());
+                stopSession(viewer.getUniqueId());
+                return;
+            }
+
+            syncFromTarget(t, inv);
+        }, 0L, 5L);
+
+        session.taskId = taskId;
         sessions.put(viewer.getUniqueId(), session);
 
         viewer.openInventory(inv);
@@ -198,7 +139,7 @@ public class InvseeCommand implements CommandExecutor, TabCompleter, Listener {
                 viewer,
                 "invsee.open",
                 "player", viewer.getName(),
-                "target", targetName
+                "target", target.getName()
         );
 
         return true;
@@ -217,8 +158,6 @@ public class InvseeCommand implements CommandExecutor, TabCompleter, Listener {
             event.setCancelled(true);
             return;
         }
-
-        if (session.taskId == -1) return;
 
         Inventory clicked = event.getClickedInventory();
         if (clicked == null) return;
@@ -248,8 +187,6 @@ public class InvseeCommand implements CommandExecutor, TabCompleter, Listener {
             return;
         }
 
-        if (session.taskId == -1) return;
-
         Bukkit.getScheduler().runTask(plugin, () -> {
             Player target = Bukkit.getPlayer(session.targetId);
             if (target == null || !target.isOnline()) {
@@ -269,22 +206,6 @@ public class InvseeCommand implements CommandExecutor, TabCompleter, Listener {
         if (session == null) return;
 
         if (event.getView().getTopInventory().equals(session.inv)) {
-
-            if (session.taskId == -1) {
-
-                if (viewer.hasPermission("lowcore.invsee.edit")) {
-                    try {
-                        ItemStack[] itemsToSave = syncToOffline(session.inv);
-                        NBTUtils.saveInventory(session.targetId, itemsToSave);
-                        LowCore.sendMessage(viewer, "§aInventory saved successfully.");
-                    } catch (Exception e) {
-                        LowCore.sendMessage(viewer, "§cError saving offline data: " + e.getMessage());
-                    }
-                } else {
-                    LowCore.sendMessage(viewer, "§cNo permission to save changes.");
-                }
-            }
-
             stopSession(viewer.getUniqueId());
         }
     }
