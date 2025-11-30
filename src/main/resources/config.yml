@@ -190,3 +190,16 @@ performance-monitor:
   check-interval-seconds: 10
   cooldown-seconds: 60
 
+# ======================
+# Sudo
+# ======================
+sudo:
+  messages:
+    usage: "&cUsage: /sudo <player> <command or message>"
+    blocked-target: "&cYou are not allowed to sudo this player."
+    blocked-sudo-command: "&cYou are not allowed to sudo the sudo command."
+    blocked-command: "&cYou may only sudo commands you can execute yourself."
+    blocked-stop: "&cYou are not allowed to sudo stop or shutdown."
+    no-command: "&cPlease provide a command after the slash."
+    forced: "&aForced &e%target% &ato: &f%input%"
+
