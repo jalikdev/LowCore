@@ -28,28 +28,29 @@ and multiple clean, well-structured systems.
 
 ## 🔧 Admin & Utility Commands
 
-| Command        | Description                       | Permission                                |
-|----------------|-----------------------------------|--------------------------------------------|
-| `/lowcore`     | Plugin info, reload, debug tools  | `lowcore.command`                          |
-| `/gm`          | Change gamemode                   | `lowcore.gm`                               |
-| `/fly`         | Toggle flight                     | `lowcore.fly`                              |
-| `/ec`          | Open own/others ender chest       | `lowcore.ec` / `lowcore.ec.others`         |
-| `/invsee`      | Live inventory view               | `lowcore.invsee`                           |
-| `/hat`         | Put item on head                  | `lowcore.hat` / `lowcore.hat.others`       |
-| `/heal`        | Heal players                      | `lowcore.heal` / `lowcore.heal.others`     |
-| `/feed`        | Feed players                      | `lowcore.feed` / `lowcore.feed.others`     |
-| `/craft`       | Open crafting table               | `lowcore.craft`                            |
-| `/anvil`       | Open anvil GUI                    | `lowcore.anvil`                            |
-| `/repair`      | Repair held/all items             | `lowcore.repair`                           |
-| `/spawnmob`    | Spawn mobs                        | `lowcore.spawnmob`                         |
-| `/killall`     | Kill mobs globally/by type/radius | `lowcore.killall`                          |
-| `/god`         | Toggle invincibility              | `lowcore.god`                              |
-| `/speed`       | Set walk/fly speed                | `lowcore.speed`                            |
-| `/cleanup`     | Cleanup GUI                       | `lowcore.cleanup`                          |
-| `/performance` | Show TPS/MSPT/RAM/chunks          | `lowcore.performance`                      |
-| `/log`         | Show recent admin actions         | `lowcore.log`                              |
-| `/vanish`      | Vanish mode                       | `lowcore.vanish`                           |
-| `/lastlogout`  | Show last logout location         | `lowcore.lastlogout`                       |
+| Command        | Description                       | Permission                             |
+|----------------|-----------------------------------|----------------------------------------|
+| `/lowcore`     | Plugin info, reload, debug tools  | `lowcore.command`                      |
+| `/gm`          | Change gamemode                   | `lowcore.gm`                           |
+| `/fly`         | Toggle flight                     | `lowcore.fly`                          |
+| `/ec`          | Open own/others ender chest       | `lowcore.ec` / `lowcore.ec.others`     |
+| `/invsee`      | Live inventory view               | `lowcore.invsee`                       |
+| `/hat`         | Put item on head                  | `lowcore.hat` / `lowcore.hat.others`   |
+| `/heal`        | Heal players                      | `lowcore.heal` / `lowcore.heal.others` |
+| `/feed`        | Feed players                      | `lowcore.feed` / `lowcore.feed.others` |
+| `/craft`       | Open crafting table               | `lowcore.craft`                        |
+| `/anvil`       | Open anvil GUI                    | `lowcore.anvil`                        |
+| `/repair`      | Repair held/all items             | `lowcore.repair`                       |
+| `/spawnmob`    | Spawn mobs                        | `lowcore.spawnmob`                     |
+| `/killall`     | Kill mobs globally/by type/radius | `lowcore.killall`                      |
+| `/god`         | Toggle invincibility              | `lowcore.god`                          |
+| `/speed`       | Set walk/fly speed                | `lowcore.speed`                        |
+| `/cleanup`     | Cleanup GUI                       | `lowcore.cleanup`                      |
+| `/performance` | Show TPS/MSPT/RAM/chunks          | `lowcore.performance`                  |
+| `/log`         | Show recent admin actions         | `lowcore.log`                          |
+| `/vanish`      | Vanish mode                       | `lowcore.vanish`                       |
+| `/lastlogout`  | Show last logout location         | `lowcore.lastlogout`                   |
+| `/sudo`        | Sudo someone to do something      | `lowcore.sudo` / `lowcore.sudo.op`     |
 
 ---
 
