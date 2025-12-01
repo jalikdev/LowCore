@@ -143,6 +143,16 @@ public class CleanupCommand implements CommandExecutor, TabCompleter, Listener {
         }
     }
 
+    private boolean isProtectedEntity(Entity ent) {
+        if (ent instanceof LivingEntity living) {
+            String name = living.getCustomName();
+            if (name != null && !name.isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private int performCleanup(String type) {
         int removed = 0;
 
@@ -174,6 +184,7 @@ public class CleanupCommand implements CommandExecutor, TabCompleter, Listener {
 
                     case "hostile" -> {
                         if (ent instanceof Monster) {
+                            if (isProtectedEntity(ent)) continue;
                             ent.remove();
                             removed++;
                         }
@@ -181,6 +192,7 @@ public class CleanupCommand implements CommandExecutor, TabCompleter, Listener {
 
                     case "passive" -> {
                         if (ent instanceof Animals) {
+                            if (isProtectedEntity(ent)) continue;
                             ent.remove();
                             removed++;
                         }
