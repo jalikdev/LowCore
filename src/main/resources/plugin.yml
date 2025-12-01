@@ -126,6 +126,13 @@ commands:
     permission: lowcore.sudo
     permission-message: §cYou do not have permission to use this command.
 
+  commands:
+    lastlogout:
+      description: Shows the last logout location of a player
+      usage: "/lastlogout <player>"
+      permission: lowcore.lastlogout
+
+
 
 # -------------------------------------------------
 # PERMISSIONS
@@ -198,3 +205,9 @@ permissions:
   lowcore.sudo.op:
     description: All sudo permissions!
     default: op
+
+
+  permissions:
+    lowcore.lastlogout:
+      description: Allows the use of /lastlogout
+      default: op
