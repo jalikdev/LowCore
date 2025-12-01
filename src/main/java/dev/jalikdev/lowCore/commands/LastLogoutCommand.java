@@ -1,6 +1,9 @@
 package dev.jalikdev.lowCore.commands;
 
 import dev.jalikdev.lowCore.LowCore;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -45,48 +48,46 @@ public class LastLogoutCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        String worldName = loc.getWorld().getName();
-        String xStr = format(loc.getX());
-        String yStr = format(loc.getY());
-        String zStr = format(loc.getZ());
+        String world = loc.getWorld().getName();
+        String x = format(loc.getX());
+        String y = format(loc.getY());
+        String z = format(loc.getZ());
 
         LowCore.sendConfigMessage(sender, "lastlogout.header", "player", targetName);
-
         LowCore.sendConfigMessage(sender, "lastlogout.coords",
-                "world", worldName,
-                "x", xStr,
-                "y", yStr,
-                "z", zStr
-        );
+                "world", world, "x", x, "y", y, "z", z);
 
-        if (sender instanceof Player) {
-            LowCore.sendConfigMessage(sender, "lastlogout.tp-hint",
-                    "x", xStr,
-                    "y", yStr,
-                    "z", zStr
-            );
+        if (sender instanceof Player player) {
+
+            String commandStr = "/tp " + x + " " + y + " " + z;
+
+            Component clickable = Component.text("§a[Click to teleport]")
+                    .hoverEvent(HoverEvent.showText(Component.text("§7Teleport to the last logout location")))
+                    .clickEvent(ClickEvent.runCommand(commandStr));
+
+            player.sendMessage(clickable);
         }
 
         return true;
     }
 
-    private String format(double value) {
-        return String.format("%.2f", value);
+    private String format(double d) {
+        return String.format("%.2f", d);
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        List<String> completions = new ArrayList<>();
+        List<String> list = new ArrayList<>();
 
         if (args.length == 1) {
             String prefix = args[0].toLowerCase();
             for (Player p : plugin.getServer().getOnlinePlayers()) {
                 if (p.getName().toLowerCase().startsWith(prefix)) {
-                    completions.add(p.getName());
+                    list.add(p.getName());
                 }
             }
         }
 
-        return completions;
+        return list;
     }
 }
