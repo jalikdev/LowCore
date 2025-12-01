@@ -1,6 +1,7 @@
 package dev.jalikdev.lowCore.listeners;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,6 +20,7 @@ public class JoinQuitListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+
         if (plugin.getConfig().getBoolean("join-quit-messages.enabled", true)) {
             String raw = plugin.getConfig().getString("join-quit-messages.join", "&a+ &7%player%");
             raw = raw.replace("%player%", player.getName());
@@ -43,11 +45,14 @@ public class JoinQuitListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        if (!plugin.getConfig().getBoolean("join-quit-messages.enabled", true)) return;
-
         Player player = event.getPlayer();
-        String raw = plugin.getConfig().getString("join-quit-messages.quit", "&c- &7%player%");
-        raw = raw.replace("%player%", player.getName());
-        event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', raw));
+
+        if (plugin.getConfig().getBoolean("join-quit-messages.enabled", true)) {
+            String raw = plugin.getConfig().getString("join-quit-messages.quit", "&c- &7%player%");
+            raw = raw.replace("%player%", player.getName());
+            event.setQuitMessage(ChatColor.translateAlternateColorCodes('&', raw));
+        }
+
+        plugin.getLastLocationRepository().saveLogoutLocation(player);
     }
 }

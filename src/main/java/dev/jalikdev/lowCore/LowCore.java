@@ -6,10 +6,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import dev.jalikdev.lowCore.listeners.JoinQuitListener;
-import dev.jalikdev.lowCore.commands.*;
 import dev.jalikdev.lowCore.listeners.MotdListener;
 import dev.jalikdev.lowCore.performance.*;
 
+import dev.jalikdev.lowCore.database.DatabaseManager;
+import dev.jalikdev.lowCore.database.LastLocationRepository;
+
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class LowCore extends JavaPlugin {
@@ -24,6 +27,9 @@ public class LowCore extends JavaPlugin {
 
     private PerformanceMonitor performanceMonitor;
 
+    private DatabaseManager databaseManager;
+    private LastLocationRepository lastLocationRepository;
+
     public static LowCore getInstance() {
         return instance;
     }
@@ -37,6 +43,18 @@ public class LowCore extends JavaPlugin {
 
         getLogger().info("LowCore plugin enabled!");
         getLogger().info("Configuration loaded.");
+
+        // >>> NEU: Datenbank verbinden
+        databaseManager = new DatabaseManager(this);
+        try {
+            databaseManager.connect();
+            getLogger().info("SQLite database connected.");
+        } catch (SQLException e) {
+            getLogger().severe("Could not connect to SQLite database!");
+            e.printStackTrace();
+        }
+
+        lastLocationRepository = new LastLocationRepository(databaseManager);
 
         LowcoreCommand lowcoreCommand = new LowcoreCommand(this);
         Objects.requireNonNull(getCommand("lowcore")).setExecutor(lowcoreCommand);
@@ -122,7 +140,6 @@ public class LowCore extends JavaPlugin {
         Objects.requireNonNull(getCommand("sudo")).setExecutor(sudoCommand);
         Objects.requireNonNull(getCommand("sudo")).setTabCompleter(sudoCommand);
 
-
         if (getConfig().getBoolean("update-checker.enabled", true)) {
             new UpdateChecker(this).checkForUpdates();
         }
@@ -138,6 +155,11 @@ public class LowCore extends JavaPlugin {
         if (performanceMonitor != null) {
             performanceMonitor.stop();
         }
+
+        if (databaseManager != null) {
+            databaseManager.close();
+        }
+
         getLogger().info("LowCore plugin disabled.");
     }
 
@@ -149,7 +171,6 @@ public class LowCore extends JavaPlugin {
     public String getPrefix() {
         return prefix != null ? prefix : ChatColor.translateAlternateColorCodes('&', DEFAULT_PREFIX);
     }
-
 
     public String getMessageRaw(String key) {
         String raw;
@@ -230,6 +251,15 @@ public class LowCore extends JavaPlugin {
 
     public void setLatestVersion(String latestVersion) {
         this.latestVersion = latestVersion;
+    }
+
+
+    public DatabaseManager getDatabaseManager() {
+        return databaseManager;
+    }
+
+    public LastLocationRepository getLastLocationRepository() {
+        return lastLocationRepository;
     }
 
 }
