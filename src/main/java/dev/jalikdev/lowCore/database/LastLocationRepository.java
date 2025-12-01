@@ -19,7 +19,6 @@ public class LastLocationRepository {
         this.db = db;
     }
 
-    // Logout speichern
     public void saveLogoutLocation(Player player) {
         Location loc = player.getLocation();
         Connection con = db.getConnection();
