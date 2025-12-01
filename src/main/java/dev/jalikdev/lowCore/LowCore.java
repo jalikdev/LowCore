@@ -140,6 +140,11 @@ public class LowCore extends JavaPlugin {
         Objects.requireNonNull(getCommand("sudo")).setExecutor(sudoCommand);
         Objects.requireNonNull(getCommand("sudo")).setTabCompleter(sudoCommand);
 
+        LastLogoutCommand lastLogoutCommand = new LastLogoutCommand(this);
+        Objects.requireNonNull(getCommand("lastlogout")).setExecutor(lastLogoutCommand);
+        Objects.requireNonNull(getCommand("lastlogout")).setTabCompleter(lastLogoutCommand);
+
+
         if (getConfig().getBoolean("update-checker.enabled", true)) {
             new UpdateChecker(this).checkForUpdates();
         }

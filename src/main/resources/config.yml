@@ -203,3 +203,18 @@ sudo:
     no-command: "&cPlease provide a command after the slash."
     forced: "&aForced &e%target% &ato: &f%input%"
 
+# ======================
+# LastLogout
+# ======================
+
+lastlogout:
+  enabled: true
+  messages:
+    disabled: "&cThe /lastlogout command is currently disabled."
+    no-permission: "&cYou don't have permission to use this command."
+    usage: "&7Usage: &a/lastlogout <player>"
+    not-found: "&cNo last logout location found for &e%player%&c."
+    header: "&7Last logout location of &a%player%&7:"
+    coords: "&7World: &e%world% &7| X: &e%x% &7Y: &e%y% &7Z: &e%z%"
+    tp-hint: "&7You can teleport there with &a/tp %x% %y% %z%&7."
+
