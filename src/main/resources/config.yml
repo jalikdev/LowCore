@@ -236,7 +236,6 @@ sudo:
 # ======================
 # LastLogout
 # ======================
-
 lastlogout:
   enabled: true
   messages:
@@ -249,9 +248,38 @@ lastlogout:
     tp-hint: "&7You can teleport there with &a/tp %x% %y% %z%&7."
 
 # ======================
+# ItemEdit
+# ======================
+itemedit:
+  enabled: true
+  permission: "lowcore.itemedit"
+  sign-format: "&8Signed by &a%player%"
+  sign-prefix: "&8Signed by"
+  messages:
+    disabled: "&cItem edit is currently disabled."
+    no-permission: "&cYou do not have permission to use this command."
+    player-only: "&cOnly players can use this command."
+    no-item: "&cYou must hold an item in your main hand."
+    no-itemmeta: "&cThis item cannot be edited."
+    usage: "&7Usage: &a/itemedit <name|resetname|lore|sign>"
+    invalid-subcommand: "&cUnknown subcommand."
+    invalid-number: "&cInvalid number."
+    name-usage: "&7Usage: &a/itemedit name <new name>"
+    name-updated: "&aItem display name updated."
+    name-reset: "&aItem display name reset to default."
+    lore-usage: "&7Usage: &a/itemedit lore <add|set|clear> ..."
+    lore-add-usage: "&7Usage: &a/itemedit lore add <text>"
+    lore-set-usage: "&7Usage: &a/itemedit lore set <line> <text>"
+    lore-added: "&aLore line added."
+    lore-set: "&aLore line updated."
+    lore-cleared: "&aLore cleared."
+    sign-updated: "&aItem signed."
+
+
+
+# ======================
 # WorldMenu
 # ======================
-
 world:
   protected-worlds:
     - world

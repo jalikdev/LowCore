@@ -142,6 +142,12 @@ commands:
     usage: /world
     permission: lowcore.world
 
+  itemedit:
+    description: Edit item name, lore and sign items
+    usage: "/itemedit <name|resetname|lore|sign>"
+    permission: lowcore.itemedit
+    permission-message: "&cYou do not have permission to use this command."
+
 
 # -------------------------------------------------
 # PERMISSIONS

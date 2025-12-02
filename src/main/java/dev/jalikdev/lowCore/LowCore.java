@@ -164,6 +164,10 @@ public class LowCore extends JavaPlugin {
         Objects.requireNonNull(getCommand("world")).setTabCompleter(worldCommand);
         getServer().getPluginManager().registerEvents(worldCommand, this);
 
+        ItemEditCommand itemEditCommand = new ItemEditCommand(this);
+        Objects.requireNonNull(getCommand("itemedit")).setExecutor(itemEditCommand);
+        Objects.requireNonNull(getCommand("itemedit")).setTabCompleter(itemEditCommand);
+
 
         if (getConfig().getBoolean("update-checker.enabled", true)) {
             new UpdateChecker(this).checkForUpdates();
