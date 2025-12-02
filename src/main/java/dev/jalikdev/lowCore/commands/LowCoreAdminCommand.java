@@ -111,6 +111,10 @@ public class LowCoreAdminCommand implements CommandExecutor, TabCompleter {
             return debugDbStats(sender);
         }
 
+        if (sub.equals("dbreconnect")) {
+            return debugDbReconnect(sender);
+        }
+
         if (sub.equals("offinv")) {
             return debugOffinv(sender, args);
         }
@@ -168,13 +172,19 @@ public class LowCoreAdminCommand implements CommandExecutor, TabCompleter {
 
     private boolean debugDbTest(CommandSender sender) {
         DatabaseManager db = plugin.getDatabaseManager();
-        if (db == null || db.getConnection() == null) {
+        if (db == null) {
+            LowCore.sendMessage(sender, "&cDatabase manager is null.");
+            return true;
+        }
+
+        Connection c = db.getConnection();
+        if (c == null) {
             LowCore.sendMessage(sender, "&cDatabase connection is null or not initialized.");
             return true;
         }
+
         long start = System.nanoTime();
-        try (Connection c = db.getConnection();
-             Statement st = c.createStatement();
+        try (Statement st = c.createStatement();
              ResultSet rs = st.executeQuery("SELECT 1")) {
             if (rs.next()) {
                 long end = System.nanoTime();
@@ -191,14 +201,19 @@ public class LowCoreAdminCommand implements CommandExecutor, TabCompleter {
 
     private boolean debugDbStats(CommandSender sender) {
         DatabaseManager db = plugin.getDatabaseManager();
-        if (db == null || db.getConnection() == null) {
+        if (db == null) {
+            LowCore.sendMessage(sender, "&cDatabase manager is null.");
+            return true;
+        }
+
+        Connection c = db.getConnection();
+        if (c == null) {
             LowCore.sendMessage(sender, "&cDatabase connection is null or not initialized.");
             return true;
         }
 
         LowCore.sendMessage(sender, "&7=== Database Stats ===");
-        try (Connection c = db.getConnection();
-             Statement st = c.createStatement()) {
+        try (Statement st = c.createStatement()) {
 
             try (ResultSet rs = st.executeQuery("SELECT COUNT(*) AS cnt FROM last_locations")) {
                 if (rs.next()) {
@@ -218,6 +233,23 @@ public class LowCoreAdminCommand implements CommandExecutor, TabCompleter {
 
         } catch (Exception e) {
             LowCore.sendMessage(sender, "&cError while reading DB stats: &4" + e.getClass().getSimpleName());
+        }
+        return true;
+    }
+
+    private boolean debugDbReconnect(CommandSender sender) {
+        DatabaseManager db = plugin.getDatabaseManager();
+        if (db == null) {
+            LowCore.sendMessage(sender, "&cDatabase manager is null.");
+            return true;
+        }
+
+        LowCore.sendMessage(sender, "&7Reconnecting SQLite database...");
+        boolean ok = db.reconnect();
+        if (ok) {
+            LowCore.sendMessage(sender, "&aDatabase reconnected successfully.");
+        } else {
+            LowCore.sendMessage(sender, "&cDatabase reconnect failed. Check console for details.");
         }
         return true;
     }
@@ -418,6 +450,7 @@ public class LowCoreAdminCommand implements CommandExecutor, TabCompleter {
                 if ("info".startsWith(in)) list.add("info");
                 if ("dbtest".startsWith(in)) list.add("dbtest");
                 if ("dbstats".startsWith(in)) list.add("dbstats");
+                if ("dbreconnect".startsWith(in)) list.add("dbreconnect");
                 if ("offinv".startsWith(in)) list.add("offinv");
                 if ("player".startsWith(in)) list.add("player");
                 if ("config".startsWith(in)) list.add("config");
@@ -473,4 +506,3 @@ public class LowCoreAdminCommand implements CommandExecutor, TabCompleter {
         return Collections.emptyList();
     }
 }
-

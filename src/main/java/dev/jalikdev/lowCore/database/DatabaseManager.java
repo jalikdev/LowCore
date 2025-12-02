@@ -3,7 +3,10 @@ package dev.jalikdev.lowCore.database;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DatabaseManager {
 
@@ -27,7 +30,7 @@ public class DatabaseManager {
     }
 
     private void createTables() throws SQLException {
-        String sql = "CREATE TABLE IF NOT EXISTS last_locations (" +
+        String sqlLastLocations = "CREATE TABLE IF NOT EXISTS last_locations (" +
                 "uuid TEXT PRIMARY KEY," +
                 "name TEXT," +
                 "world TEXT," +
@@ -40,10 +43,10 @@ public class DatabaseManager {
                 ");";
 
         try (Statement stmt = connection.createStatement()) {
-            stmt.execute(sql);
+            stmt.execute(sqlLastLocations);
         }
 
-        String sqlOffline = "CREATE TABLE IF NOT EXISTS offline_inventories (" +
+        String sqlOfflineInv = "CREATE TABLE IF NOT EXISTS offline_inventories (" +
                 "uuid TEXT PRIMARY KEY," +
                 "inv_snapshot TEXT," +
                 "ec_snapshot TEXT," +
@@ -53,7 +56,7 @@ public class DatabaseManager {
                 ");";
 
         try (Statement stmt = connection.createStatement()) {
-            stmt.execute(sqlOffline);
+            stmt.execute(sqlOfflineInv);
         }
     }
 
@@ -67,5 +70,18 @@ public class DatabaseManager {
 
     public Connection getConnection() {
         return connection;
+    }
+
+    public boolean reconnect() {
+        close();
+        try {
+            connect();
+            plugin.getLogger().info("SQLite database reconnected.");
+            return true;
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Could not reconnect to SQLite database!");
+            e.printStackTrace();
+            return false;
+        }
     }
 }
