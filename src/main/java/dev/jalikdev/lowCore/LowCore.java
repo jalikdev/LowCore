@@ -12,6 +12,9 @@ import dev.jalikdev.lowCore.performance.*;
 import dev.jalikdev.lowCore.database.DatabaseManager;
 import dev.jalikdev.lowCore.database.LastLocationRepository;
 
+import dev.jalikdev.lowCore.database.OfflineInventoryRepository;
+import dev.jalikdev.lowCore.listeners.OfflineInventoryListener;
+
 import java.sql.SQLException;
 import java.util.Objects;
 
@@ -34,6 +37,8 @@ public class LowCore extends JavaPlugin {
         return instance;
     }
 
+    private OfflineInventoryRepository offlineInventoryRepository;
+
     @Override
     public void onEnable() {
         instance = this;
@@ -44,7 +49,6 @@ public class LowCore extends JavaPlugin {
         getLogger().info("LowCore plugin enabled!");
         getLogger().info("Configuration loaded.");
 
-        // >>> NEU: Datenbank verbinden
         databaseManager = new DatabaseManager(this);
         try {
             databaseManager.connect();
@@ -55,6 +59,7 @@ public class LowCore extends JavaPlugin {
         }
 
         lastLocationRepository = new LastLocationRepository(databaseManager);
+        offlineInventoryRepository = new OfflineInventoryRepository(databaseManager);
 
         LowcoreCommand lowcoreCommand = new LowcoreCommand(this);
         Objects.requireNonNull(getCommand("lowcore")).setExecutor(lowcoreCommand);
@@ -69,9 +74,10 @@ public class LowCore extends JavaPlugin {
         Objects.requireNonNull(getCommand("gm")).setExecutor(gmCommand);
         Objects.requireNonNull(getCommand("gm")).setTabCompleter(gmCommand);
 
-        EcCommand ecCommand = new EcCommand();
+        EcCommand ecCommand = new EcCommand(this);
         Objects.requireNonNull(getCommand("ec")).setExecutor(ecCommand);
         Objects.requireNonNull(getCommand("ec")).setTabCompleter(ecCommand);
+        getServer().getPluginManager().registerEvents(ecCommand, this);
 
         HatCommand hatCommand = new HatCommand();
         Objects.requireNonNull(getCommand("hat")).setExecutor(hatCommand);
@@ -150,6 +156,7 @@ public class LowCore extends JavaPlugin {
         }
 
         getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
+        getServer().getPluginManager().registerEvents(new OfflineInventoryListener(this), this);
 
         performanceMonitor = new PerformanceMonitor(this);
         performanceMonitor.start();
@@ -265,6 +272,10 @@ public class LowCore extends JavaPlugin {
 
     public LastLocationRepository getLastLocationRepository() {
         return lastLocationRepository;
+    }
+
+    public OfflineInventoryRepository getOfflineInventoryRepository() {
+        return offlineInventoryRepository;
     }
 
 }

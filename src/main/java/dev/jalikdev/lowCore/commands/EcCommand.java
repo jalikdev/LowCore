@@ -1,27 +1,34 @@
 package dev.jalikdev.lowCore.commands;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
 import dev.jalikdev.lowCore.LowCore;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.*;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-public class EcCommand implements CommandExecutor, TabCompleter {
+public class EcCommand implements CommandExecutor, TabCompleter, Listener {
+
+    private final LowCore plugin;
+    private final Map<Inventory, UUID> offlineEcViews = new HashMap<>();
+
+    public EcCommand(LowCore plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender,
                              @NotNull Command command,
                              @NotNull String label,
                              @NotNull String[] args) {
-
 
         if (args.length == 0) {
             if (!(sender instanceof Player)) {
@@ -45,22 +52,55 @@ public class EcCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        Player target = Bukkit.getPlayerExact(args[0]);
-
-        if (target == null) {
-            LowCore.sendConfigMessage(sender, "unknown-player");
-            return true;
-        }
-
         if (!(sender instanceof Player)) {
             LowCore.sendConfigMessage(sender, "player-only");
             return true;
         }
 
         Player viewer = (Player) sender;
-        viewer.openInventory(target.getEnderChest());
-        LowCore.sendMessage(sender, "&aOpened &e" + target.getName() + "&a's ender chest.");
+        String targetName = args[0];
+
+        Player target = Bukkit.getPlayerExact(targetName);
+        if (target != null) {
+            viewer.openInventory(target.getEnderChest());
+            LowCore.sendMessage(sender, "&aOpened &e" + target.getName() + "&a's ender chest.");
+            return true;
+        }
+
+        OfflinePlayer offline = Bukkit.getOfflinePlayer(targetName);
+        if ((offline == null || !offline.hasPlayedBefore()) && !offline.isOnline()) {
+            LowCore.sendConfigMessage(sender, "unknown-player");
+            return true;
+        }
+
+        ItemStack[] data = plugin.getOfflineInventoryRepository().loadEffectiveEnderChest(offline.getUniqueId());
+        if (data == null) {
+            LowCore.sendMessage(sender, "&cEs gibt keine gespeicherten Offline-Enderchestdaten für &e" + offline.getName() + "&c.");
+            return true;
+        }
+
+        Inventory inv = Bukkit.createInventory(viewer, 27, "§8EnderChest §7- §a" + offline.getName() + " §7(offline)");
+        inv.setContents(data);
+
+        offlineEcViews.put(inv, offline.getUniqueId());
+        viewer.openInventory(inv);
+
+        LowCore.sendMessage(sender, "&aOpened OFFLINE ender chest of &e" + offline.getName() + "&a.");
         return true;
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        Inventory top = event.getView().getTopInventory();
+        UUID uuid = offlineEcViews.remove(top);
+        if (uuid == null) return;
+
+        ItemStack[] contents = new ItemStack[top.getSize()];
+        for (int i = 0; i < top.getSize(); i++) {
+            contents[i] = top.getItem(i);
+        }
+
+        plugin.getOfflineInventoryRepository().savePendingEnderChest(uuid, contents);
     }
 
     @Override
