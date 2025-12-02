@@ -253,27 +253,43 @@ lastlogout:
 itemedit:
   enabled: true
   permission: "lowcore.itemedit"
-  sign-format: "&8Signed by &a%player%"
+
+  sign-format: "&8Signed by &a%signer%"
   sign-prefix: "&8Signed by"
+
+  sign-store-executor: true
+  sign-meta-format: "&8[Signed in LowCore by &7%player%&8]"
+  sign-meta-prefix: "&8[Signed in LowCore"
+
+  book-copy-title: true
+
   messages:
     disabled: "&cItem edit is currently disabled."
     no-permission: "&cYou do not have permission to use this command."
     player-only: "&cOnly players can use this command."
     no-item: "&cYou must hold an item in your main hand."
     no-itemmeta: "&cThis item cannot be edited."
-    usage: "&7Usage: &a/itemedit <name|resetname|lore|sign>"
+    usage: "&7Usage: &a/itemedit <name|resetname|lore|sign|unlockbook>"
     invalid-subcommand: "&cUnknown subcommand."
     invalid-number: "&cInvalid number."
+
     name-usage: "&7Usage: &a/itemedit name <new name>"
     name-updated: "&aItem display name updated."
     name-reset: "&aItem display name reset to default."
+
     lore-usage: "&7Usage: &a/itemedit lore <add|set|clear> ..."
     lore-add-usage: "&7Usage: &a/itemedit lore add <text>"
     lore-set-usage: "&7Usage: &a/itemedit lore set <line> <text>"
     lore-added: "&aLore line added."
     lore-set: "&aLore line updated."
     lore-cleared: "&aLore cleared."
-    sign-updated: "&aItem signed."
+
+    sign-updated: "&aItem signed as &e%signer% &7(by %player%)."
+
+    unlockbook-not-written: "&cYou must hold a signed book to unlock it."
+    unlockbook-failed: "&cFailed to read book data."
+    unlockbook-success: "&aBook unlocked. You can edit it again."
+
 
 
 
