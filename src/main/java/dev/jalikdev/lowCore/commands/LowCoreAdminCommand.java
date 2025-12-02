@@ -9,10 +9,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class LowCoreAdminCommand implements CommandExecutor, TabCompleter {
 
@@ -36,42 +33,35 @@ public class LowCoreAdminCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 0) {
-            sendUsage(sender);
+            LowCore.sendConfigMessage(sender, "admin.usage");
             return true;
         }
 
-        String category = args[0].toLowerCase();
+        if (args[0].equalsIgnoreCase("offinv")) {
 
-        if (category.equals("offinv")) {
             if (args.length == 1) {
                 LowCore.sendConfigMessage(sender, "admin.offinv-usage");
                 return true;
             }
 
-            String action = args[1].toLowerCase();
-
-            if (action.equals("clear")) {
+            if (args[1].equalsIgnoreCase("clear")) {
                 if (args.length < 3) {
                     LowCore.sendConfigMessage(sender, "admin.offinv-usage");
                     return true;
                 }
 
-                String targetName = args[2];
-                OfflinePlayer target = Bukkit.getOfflinePlayer(targetName);
-
-                if ((target == null || !target.hasPlayedBefore()) && !target.isOnline()) {
+                OfflinePlayer off = Bukkit.getOfflinePlayer(args[2]);
+                if ((off == null || !off.hasPlayedBefore()) && !off.isOnline()) {
                     LowCore.sendConfigMessage(sender, "unknown-player");
                     return true;
                 }
 
-                UUID uuid = target.getUniqueId();
-                offlineRepo.deletePlayer(uuid);
-
-                LowCore.sendConfigMessage(sender, "admin.offinv-cleared", "target", target.getName());
+                offlineRepo.deletePlayer(off.getUniqueId());
+                LowCore.sendConfigMessage(sender, "admin.offinv-cleared", "target", off.getName());
                 return true;
             }
 
-            if (action.equals("clearall")) {
+            if (args[1].equalsIgnoreCase("clearall")) {
                 int count = offlineRepo.deleteAll();
                 LowCore.sendConfigMessage(sender, "admin.offinv-cleared-all", "count", String.valueOf(count));
                 return true;
@@ -81,12 +71,8 @@ public class LowCoreAdminCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        sendUsage(sender);
-        return true;
-    }
-
-    private void sendUsage(CommandSender sender) {
         LowCore.sendConfigMessage(sender, "admin.usage");
+        return true;
     }
 
     @Override
@@ -95,45 +81,35 @@ public class LowCoreAdminCommand implements CommandExecutor, TabCompleter {
                                                 @NotNull String alias,
                                                 @NotNull String[] args) {
 
-        if (!sender.hasPermission("lowcore.admin")) {
-            return Collections.emptyList();
-        }
+        if (!sender.hasPermission("lowcore.admin")) return Collections.emptyList();
 
         if (args.length == 1) {
-            List<String> result = new ArrayList<>();
-            String current = args[0].toLowerCase();
-
-            if ("offinv".startsWith(current)) {
-                result.add("offinv");
-            }
-
-            return result;
+            List<String> list = new ArrayList<>();
+            if ("offinv".startsWith(args[0].toLowerCase())) list.add("offinv");
+            return list;
         }
 
         if (args.length == 2 && args[0].equalsIgnoreCase("offinv")) {
-            List<String> result = new ArrayList<>();
-            String current = args[1].toLowerCase();
-
-            if ("clear".startsWith(current)) result.add("clear");
-            if ("clearall".startsWith(current)) result.add("clearall");
-
-            return result;
+            List<String> list = new ArrayList<>();
+            if ("clear".startsWith(args[1].toLowerCase())) list.add("clear");
+            if ("clearall".startsWith(args[1].toLowerCase())) list.add("clearall");
+            return list;
         }
 
         if (args.length == 3
                 && args[0].equalsIgnoreCase("offinv")
                 && args[1].equalsIgnoreCase("clear")) {
 
-            String current = args[2].toLowerCase();
-            List<String> result = new ArrayList<>();
+            String input = args[2].toLowerCase();
+            List<String> names = new ArrayList<>();
 
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                if (p.getName().toLowerCase().startsWith(current)) {
-                    result.add(p.getName());
-                }
+            for (UUID uuid : offlineRepo.getAllWithData()) {
+                OfflinePlayer off = Bukkit.getOfflinePlayer(uuid);
+                String name = off.getName();
+                if (name != null && name.toLowerCase().startsWith(input)) names.add(name);
             }
 
-            return result;
+            return names;
         }
 
         return Collections.emptyList();
