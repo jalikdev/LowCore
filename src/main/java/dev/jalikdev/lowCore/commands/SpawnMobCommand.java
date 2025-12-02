@@ -1,5 +1,6 @@
 package dev.jalikdev.lowCore.commands;
 
+import dev.jalikdev.lowCore.LowCore;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -11,13 +12,10 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
-import dev.jalikdev.lowCore.LowCore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class SpawnMobCommand implements CommandExecutor, TabCompleter {
 
@@ -42,7 +40,7 @@ public class SpawnMobCommand implements CommandExecutor, TabCompleter {
                     return null;
                 }
 
-                Location spawn = lastAir.clone().add(0, 0, 0);
+                Location spawn = lastAir.clone();
                 spawn.setYaw(player.getLocation().getYaw());
                 spawn.setPitch(0);
                 return spawn;
@@ -52,7 +50,7 @@ public class SpawnMobCommand implements CommandExecutor, TabCompleter {
         }
 
         if (lastAir != null) {
-            Location spawn = lastAir.clone().add(0, 0, 0);
+            Location spawn = lastAir.clone();
             spawn.setYaw(player.getLocation().getYaw());
             spawn.setPitch(0);
             return spawn;
@@ -67,12 +65,10 @@ public class SpawnMobCommand implements CommandExecutor, TabCompleter {
                              @NotNull String label,
                              @NotNull String[] args) {
 
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             sender.sendMessage("§cOnly players can use this command.");
             return true;
         }
-
-        Player player = (Player) sender;
 
         if (!player.hasPermission("lowcore.spawnmob")) {
             LowCore.sendConfigMessage(player, "spawnmob.no-permission");
@@ -84,7 +80,7 @@ public class SpawnMobCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        String typeName = args[0].toUpperCase();
+        String typeName = args[0].toUpperCase(Locale.ROOT);
 
         EntityType type;
         try {
@@ -100,6 +96,7 @@ public class SpawnMobCommand implements CommandExecutor, TabCompleter {
         }
 
         int maxAmount = plugin.getConfig().getInt("spawnmob.max-amount", 50);
+        int maxDistance = plugin.getConfig().getInt("spawnmob.max-distance", 30);
 
         int amount = 1;
         if (args.length >= 2) {
@@ -118,17 +115,22 @@ public class SpawnMobCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        List<String> restricted = plugin.getConfig().getStringList("spawnmob.restricted-mobs");
+        List<String> restrictedList = plugin.getConfig().getStringList("spawnmob.restricted-mobs");
         String restrictedPermission = plugin.getConfig().getString("spawnmob.restricted-permission", "lowcore.spawnmob.restricted");
 
-        if (restricted.stream().anyMatch(s -> s.equalsIgnoreCase(type.name()))) {
+        Set<String> restricted = new HashSet<>();
+        for (String s : restrictedList) {
+            restricted.add(s.toUpperCase(Locale.ROOT));
+        }
+
+        if (restricted.contains(type.name().toUpperCase(Locale.ROOT))) {
             if (!player.hasPermission(restrictedPermission)) {
-                LowCore.sendConfigMessage(player, "spawnmob.restricted", "type", type.name().toLowerCase());
+                LowCore.sendConfigMessage(player, "spawnmob.restricted", "type", type.name().toLowerCase(Locale.ROOT));
                 return true;
             }
         }
 
-        Location loc = getSpawnLocation(player, 30);
+        Location loc = getSpawnLocation(player, maxDistance);
         if (loc == null) {
             LowCore.sendConfigMessage(player, "spawnmob.no-target");
             return true;
@@ -148,7 +150,7 @@ public class SpawnMobCommand implements CommandExecutor, TabCompleter {
             String msg = plugin.formatMessage(
                     "spawnmob.success",
                     "amount", String.valueOf(spawned),
-                    "type", type.name().toLowerCase()
+                    "type", type.name().toLowerCase(Locale.ROOT)
             );
             player.sendMessage(msg);
         }
@@ -163,16 +165,30 @@ public class SpawnMobCommand implements CommandExecutor, TabCompleter {
                                                 @NotNull String[] args) {
 
         if (!sender.hasPermission("lowcore.spawnmob")) {
-            return new ArrayList<>();
+            return Collections.emptyList();
+        }
+
+        List<String> restrictedList = plugin.getConfig().getStringList("spawnmob.restricted-mobs");
+        String restrictedPermission = plugin.getConfig().getString("spawnmob.restricted-permission", "lowcore.spawnmob.restricted");
+
+        Set<String> restricted = new HashSet<>();
+        for (String s : restrictedList) {
+            restricted.add(s.toUpperCase(Locale.ROOT));
         }
 
         if (args.length == 1) {
-            String input = args[0].toLowerCase();
+            String input = args[0].toLowerCase(Locale.ROOT);
             List<String> completions = new ArrayList<>();
 
             for (EntityType type : EntityType.values()) {
                 if (!type.isAlive() || !type.isSpawnable()) continue;
-                String name = type.name().toLowerCase();
+
+                if (!sender.hasPermission(restrictedPermission)
+                        && restricted.contains(type.name().toUpperCase(Locale.ROOT))) {
+                    continue;
+                }
+
+                String name = type.name().toLowerCase(Locale.ROOT);
                 if (name.startsWith(input)) {
                     completions.add(name);
                 }
@@ -184,6 +200,6 @@ public class SpawnMobCommand implements CommandExecutor, TabCompleter {
             return Arrays.asList("1", "5", "10", "20");
         }
 
-        return new ArrayList<>();
+        return Collections.emptyList();
     }
 }
