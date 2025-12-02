@@ -75,6 +75,12 @@ admin:
     offinv-cleared: "&aOffline inventory data for &e%target% &ahas been cleared."
     offinv-cleared-all: "&aAll offline inventory entries have been cleared. &7(Count: &e%count%&7)"
 
+    debug-usage: "&7Usage: &e/lowcoreadmin debug <info|dbtest|dbstats|offinv|player|config|files|status>"
+    debug-offinv-usage: "&7Usage: &e/lowcoreadmin debug offinv <list|info <player>>"
+    debug-player-usage: "&7Usage: &e/lowcoreadmin debug player <player>"
+    debug-config-usage: "&7Usage: &e/lowcoreadmin debug config reload"
+    debug-files-usage: "&7Usage: &e/lowcoreadmin debug files list"
+
 # ======================
 # Invsee
 # ======================

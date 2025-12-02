@@ -10,6 +10,22 @@ import java.util.*;
 
 public class OfflineInventoryRepository {
 
+    public static class OfflineInventoryMeta {
+        public final boolean hasInvSnapshot;
+        public final boolean hasEcSnapshot;
+        public final boolean hasInvPending;
+        public final boolean hasEcPending;
+        public final long updatedAt;
+
+        public OfflineInventoryMeta(boolean hasInvSnapshot, boolean hasEcSnapshot, boolean hasInvPending, boolean hasEcPending, long updatedAt) {
+            this.hasInvSnapshot = hasInvSnapshot;
+            this.hasEcSnapshot = hasEcSnapshot;
+            this.hasInvPending = hasInvPending;
+            this.hasEcPending = hasEcPending;
+            this.updatedAt = updatedAt;
+        }
+    }
+
     private final DatabaseManager databaseManager;
 
     public OfflineInventoryRepository(DatabaseManager databaseManager) {
@@ -204,5 +220,22 @@ public class OfflineInventoryRepository {
         } catch (Exception ignored) {}
 
         return list;
+    }
+
+    public OfflineInventoryMeta getMeta(UUID uuid) {
+        String sql = "SELECT inv_snapshot, ec_snapshot, inv_pending, ec_pending, updated_at FROM offline_inventories WHERE uuid = ?";
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setString(1, uuid.toString());
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                boolean hasInvSnap = rs.getString("inv_snapshot") != null;
+                boolean hasEcSnap = rs.getString("ec_snapshot") != null;
+                boolean hasInvPend = rs.getString("inv_pending") != null;
+                boolean hasEcPend = rs.getString("ec_pending") != null;
+                long updated = rs.getLong("updated_at");
+                return new OfflineInventoryMeta(hasInvSnap, hasEcSnap, hasInvPend, hasEcPend, updated);
+            }
+        } catch (Exception ignored) {}
+        return null;
     }
 }
