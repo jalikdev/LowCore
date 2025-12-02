@@ -66,6 +66,16 @@ lowcore:
     help-unknown-topic: "&cNo detailed help available for &f%topic%&c."
 
 # ======================
+# Admin / Internal Tools
+# ======================
+admin:
+  messages:
+    usage: "&7LowCore admin command:&r\n&8- &e/lowcoreadmin offinv clear <player> &7- clear offline inventory data for one player&r\n&8- &e/lowcoreadmin offinv clearall &7- clear all offline inventory data"
+    offinv-usage: "&7Usage: &e/lowcoreadmin offinv <clear|clearall> [player]"
+    offinv-cleared: "&aOffline inventory data for &e%target% &ahas been cleared."
+    offinv-cleared-all: "&aAll offline inventory entries have been cleared. &7(Count: &e%count%&7)"
+
+# ======================
 # Invsee
 # ======================
 invsee:
@@ -74,6 +84,20 @@ invsee:
     offline: "&cPlayer &e%target% &cis offline."
     self: "&cYou cannot use /invsee on yourself."
     usage: "&cUsage: &e/invsee <player>"
+    offline-no-data: "&cNo offline inventory data found for &e%target%&c."
+    offline-open: "&aYou are now viewing the &eOFFLINE &ainventory of &e%target%&a."
+
+# ======================
+# EnderChest
+# ======================
+ec:
+  messages:
+    console-usage: "&cConsole must specify a player: &e/ec <player>"
+    self-open: "&aOpened your ender chest."
+    open-other: "&aOpened &e%target%'s &aender chest."
+    offline-no-data: "&cNo offline ender chest data found for &e%target%&c."
+    offline-open: "&aOpened OFFLINE ender chest of &e%target%&a."
+
 
 # ======================
 # Heal & Feed Settings

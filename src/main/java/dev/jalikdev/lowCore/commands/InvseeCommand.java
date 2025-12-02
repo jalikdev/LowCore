@@ -161,7 +161,7 @@ public class InvseeCommand implements CommandExecutor, TabCompleter, Listener {
         ItemStack[] data = offlineRepository.loadEffectiveInventory(uuid);
 
         if (data == null) {
-            LowCore.sendMessage(viewer, "&cEs gibt keine gespeicherten Offline-Inventardaten für &e" + offlineTarget.getName() + "&c.");
+            LowCore.sendConfigMessage(viewer, "invsee.offline-no-data", "target", offlineTarget.getName());
             return true;
         }
 
@@ -175,10 +175,9 @@ public class InvseeCommand implements CommandExecutor, TabCompleter, Listener {
         offlineViews.put(inv, uuid);
         viewer.openInventory(inv);
 
-        LowCore.sendMessage(viewer, "&aDu siehst das &eOFFLINE &aInventar von &e" + offlineTarget.getName() + "&a.");
+        LowCore.sendConfigMessage(viewer, "invsee.offline-open", "target", offlineTarget.getName());
         return true;
     }
-
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {

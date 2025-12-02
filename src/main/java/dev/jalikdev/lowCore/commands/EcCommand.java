@@ -32,7 +32,7 @@ public class EcCommand implements CommandExecutor, TabCompleter, Listener {
 
         if (args.length == 0) {
             if (!(sender instanceof Player)) {
-                LowCore.sendMessage(sender, "&cConsole must specify a player: &e/ec <player>");
+                LowCore.sendConfigMessage(sender, "ec.console-usage");
                 return true;
             }
 
@@ -43,7 +43,7 @@ public class EcCommand implements CommandExecutor, TabCompleter, Listener {
 
             Player player = (Player) sender;
             player.openInventory(player.getEnderChest());
-            LowCore.sendMessage(sender, "&aOpened your ender chest.");
+            LowCore.sendConfigMessage(sender, "ec.self-open");
             return true;
         }
 
@@ -63,7 +63,7 @@ public class EcCommand implements CommandExecutor, TabCompleter, Listener {
         Player target = Bukkit.getPlayerExact(targetName);
         if (target != null) {
             viewer.openInventory(target.getEnderChest());
-            LowCore.sendMessage(sender, "&aOpened &e" + target.getName() + "&a's ender chest.");
+            LowCore.sendConfigMessage(sender, "ec.open-other", "target", target.getName());
             return true;
         }
 
@@ -75,7 +75,7 @@ public class EcCommand implements CommandExecutor, TabCompleter, Listener {
 
         ItemStack[] data = plugin.getOfflineInventoryRepository().loadEffectiveEnderChest(offline.getUniqueId());
         if (data == null) {
-            LowCore.sendMessage(sender, "&cEs gibt keine gespeicherten Offline-Enderchestdaten für &e" + offline.getName() + "&c.");
+            LowCore.sendConfigMessage(sender, "ec.offline-no-data", "target", offline.getName());
             return true;
         }
 
@@ -85,7 +85,7 @@ public class EcCommand implements CommandExecutor, TabCompleter, Listener {
         offlineEcViews.put(inv, offline.getUniqueId());
         viewer.openInventory(inv);
 
-        LowCore.sendMessage(sender, "&aOpened OFFLINE ender chest of &e" + offline.getName() + "&a.");
+        LowCore.sendConfigMessage(sender, "ec.offline-open", "target", offline.getName());
         return true;
     }
 

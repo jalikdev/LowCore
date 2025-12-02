@@ -131,6 +131,11 @@ commands:
     usage: "/lastlogout <player>"
     permission: lowcore.lastlogout
 
+  lowcoreadmin:
+    description: LowCore admin/settings command
+    usage: /lowcoreadmin
+    permission: lowcore.admin
+    aliases: [ lca ]
 
 
 # -------------------------------------------------
@@ -205,8 +210,10 @@ permissions:
     description: All sudo permissions!
     default: op
 
+  lowcore.lastlogout:
+    description: Allows the use of /lastlogout
+    default: op
 
-  permissions:
-    lowcore.lastlogout:
-      description: Allows the use of /lastlogout
-      default: op
+  lowcore.admin:
+    description: Allows using the LowCore admin/settings command
+    default: op
