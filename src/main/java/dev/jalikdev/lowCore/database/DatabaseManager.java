@@ -42,6 +42,19 @@ public class DatabaseManager {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(sql);
         }
+
+        String sqlOffline = "CREATE TABLE IF NOT EXISTS offline_inventories (" +
+                "uuid TEXT PRIMARY KEY," +
+                "inv_snapshot TEXT," +
+                "ec_snapshot TEXT," +
+                "inv_pending TEXT," +
+                "ec_pending TEXT," +
+                "updated_at INTEGER" +
+                ");";
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sqlOffline);
+        }
     }
 
     public void close() {
