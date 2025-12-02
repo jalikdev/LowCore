@@ -150,83 +150,73 @@ public class ItemEditCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
 
+            // Simple lore sign for normal items (no extra meta line)
             case "sign": {
-                String fakeSigner;
-                if (args.length >= 2) {
-                    fakeSigner = join(args, 1);
-                } else {
-                    fakeSigner = player.getName();
+                if (item.getType() == Material.WRITABLE_BOOK || item.getType() == Material.WRITTEN_BOOK) {
+                    LowCore.sendConfigMessage(player, "itemedit.messages.sign-book-hint");
+                    return true;
                 }
 
                 String baseItemName = meta.hasDisplayName()
                         ? ChatColor.stripColor(meta.getDisplayName())
                         : prettifyMaterial(item.getType());
 
-                String visibleFormat = plugin.getConfig().getString(
+                String signer = args.length >= 2 ? join(args, 1) : player.getName();
+
+                String format = plugin.getConfig().getString(
                         "itemedit.sign-format",
                         "&8Signed by &a%signer%"
                 );
 
-                String metaFormat = plugin.getConfig().getString(
-                        "itemedit.sign-meta-format",
-                        "&8[Signed using &7/itemedit sign &8by &7%player%&8]"
-                );
-
-                String visibleLine = visibleFormat
-                        .replace("%signer%", fakeSigner)
+                String line = format
+                        .replace("%signer%", signer)
                         .replace("%item%", baseItemName);
-                visibleLine = color(visibleLine);
 
-                String metaLine = metaFormat
-                        .replace("%signer%", fakeSigner)
-                        .replace("%item%", baseItemName)
-                        .replace("%player%", player.getName());
-                metaLine = color(metaLine);
+                line = color(line);
 
                 List<String> lore = meta.getLore();
                 if (lore == null) lore = new ArrayList<>();
 
-                String visiblePrefixRaw = plugin.getConfig().getString("itemedit.sign-prefix", "&8Signed by");
-                String metaPrefixRaw = plugin.getConfig().getString("itemedit.sign-meta-prefix", "&8[Signed using");
-                String visiblePrefix = ChatColor.stripColor(color(visiblePrefixRaw));
-                String metaPrefix = ChatColor.stripColor(color(metaPrefixRaw));
+                String rawPrefix = plugin.getConfig().getString("itemedit.sign-prefix", "&8Signed by");
+                String coloredPrefix = ChatColor.stripColor(color(rawPrefix));
 
-                boolean visibleUpdated = false;
+                boolean updated = false;
                 for (int i = 0; i < lore.size(); i++) {
                     String existing = ChatColor.stripColor(lore.get(i));
-                    if (existing.startsWith(visiblePrefix)) {
-                        lore.set(i, visibleLine);
-                        visibleUpdated = true;
+                    if (existing.startsWith(coloredPrefix)) {
+                        lore.set(i, line);
+                        updated = true;
                         break;
                     }
                 }
-                if (!visibleUpdated) {
-                    lore.add(visibleLine);
-                }
 
-                boolean storeExecutor = plugin.getConfig().getBoolean("itemedit.sign-store-executor", true);
-                if (storeExecutor) {
-                    boolean metaUpdated = false;
-                    for (int i = 0; i < lore.size(); i++) {
-                        String existing = ChatColor.stripColor(lore.get(i));
-                        if (existing.startsWith(metaPrefix)) {
-                            lore.set(i, metaLine);
-                            metaUpdated = true;
-                            break;
-                        }
-                    }
-                    if (!metaUpdated) {
-                        lore.add(metaLine);
-                    }
+                if (!updated) {
+                    lore.add(line);
                 }
 
                 meta.setLore(lore);
                 item.setItemMeta(meta);
 
                 LowCore.sendConfigMessage(player, "itemedit.messages.sign-updated",
-                        "signer", fakeSigner,
-                        "player", player.getName()
+                        "signer", signer
                 );
+                return true;
+            }
+
+            // Book-specific subcommands: /itemedit book sign <name>
+            case "book": {
+                if (args.length < 2) {
+                    LowCore.sendConfigMessage(player, "itemedit.messages.book-usage");
+                    return true;
+                }
+
+                String bookSub = args[1].toLowerCase(Locale.ROOT);
+
+                if (bookSub.equals("sign")) {
+                    return handleBookSign(player, item, args);
+                }
+
+                LowCore.sendConfigMessage(player, "itemedit.messages.invalid-subcommand");
                 return true;
             }
 
@@ -243,21 +233,22 @@ public class ItemEditCommand implements CommandExecutor, TabCompleter {
 
                 BookMeta writtenMeta = (BookMeta) meta;
 
-                ItemStack newBook = new ItemStack(Material.WRITABLE_BOOK);
-                BookMeta editableMeta = (BookMeta) newBook.getItemMeta();
-
-                if (editableMeta != null) {
-                    editableMeta.setPages(writtenMeta.getPages());
-
-                    boolean copyTitle = plugin.getConfig().getBoolean("itemedit.book-copy-title", true);
-                    if (copyTitle && writtenMeta.hasTitle()) {
-                        editableMeta.setDisplayName(color("&f" + writtenMeta.getTitle()));
-                    }
-
-                    newBook.setItemMeta(editableMeta);
+                item.setType(Material.WRITABLE_BOOK);
+                BookMeta editableMeta = (BookMeta) item.getItemMeta();
+                if (editableMeta == null) {
+                    LowCore.sendConfigMessage(player, "itemedit.messages.unlockbook-failed");
+                    return true;
                 }
 
-                player.getInventory().setItemInMainHand(newBook);
+                editableMeta.setPages(writtenMeta.getPages());
+
+                boolean copyTitle = plugin.getConfig().getBoolean("itemedit.book-copy-title", true);
+                if (copyTitle && writtenMeta.hasTitle()) {
+                    editableMeta.setDisplayName(color("&f" + writtenMeta.getTitle()));
+                }
+
+                item.setItemMeta(editableMeta);
+
                 LowCore.sendConfigMessage(player, "itemedit.messages.unlockbook-success");
                 return true;
             }
@@ -266,6 +257,51 @@ public class ItemEditCommand implements CommandExecutor, TabCompleter {
                 LowCore.sendConfigMessage(player, "itemedit.messages.invalid-subcommand");
                 return true;
         }
+    }
+
+    private boolean handleBookSign(Player player, ItemStack item, String[] args) {
+        if (item.getType() != Material.WRITABLE_BOOK && item.getType() != Material.WRITTEN_BOOK) {
+            LowCore.sendConfigMessage(player, "itemedit.messages.book-not-book");
+            return true;
+        }
+
+        if (!(item.getItemMeta() instanceof BookMeta)) {
+            LowCore.sendConfigMessage(player, "itemedit.messages.book-meta-missing");
+            return true;
+        }
+
+        if (args.length < 3) {
+            LowCore.sendConfigMessage(player, "itemedit.messages.book-sign-usage");
+            return true;
+        }
+
+        String authorName = join(args, 2);
+
+        BookMeta meta = (BookMeta) item.getItemMeta();
+        if (meta == null) {
+            LowCore.sendConfigMessage(player, "itemedit.messages.book-meta-missing");
+            return true;
+        }
+
+        meta.setAuthor(authorName);
+
+        if (!meta.hasTitle()) {
+            String rawTitle = plugin.getConfig().getString(
+                    "itemedit.book-sign-title",
+                    "&fSigned Book"
+            );
+            String coloredTitle = ChatColor.stripColor(color(rawTitle));
+            meta.setTitle(coloredTitle);
+        }
+
+        // make sure it becomes a real signed book
+        item.setType(Material.WRITTEN_BOOK);
+        item.setItemMeta(meta);
+
+        LowCore.sendConfigMessage(player, "itemedit.messages.book-signed",
+                "author", authorName
+        );
+        return true;
     }
 
     private String join(String[] array, int start) {
@@ -302,7 +338,7 @@ public class ItemEditCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 1) {
-            List<String> base = Arrays.asList("name", "resetname", "lore", "sign", "unlockbook");
+            List<String> base = Arrays.asList("name", "resetname", "lore", "sign", "book", "unlockbook");
             List<String> result = new ArrayList<>();
             String current = args[0].toLowerCase(Locale.ROOT);
             for (String s : base) {
@@ -315,6 +351,18 @@ public class ItemEditCommand implements CommandExecutor, TabCompleter {
 
         if (args.length == 2 && args[0].equalsIgnoreCase("lore")) {
             List<String> base = Arrays.asList("add", "set", "clear");
+            List<String> result = new ArrayList<>();
+            String current = args[1].toLowerCase(Locale.ROOT);
+            for (String s : base) {
+                if (s.startsWith(current)) {
+                    result.add(s);
+                }
+            }
+            return result;
+        }
+
+        if (args.length == 2 && args[0].equalsIgnoreCase("book")) {
+            List<String> base = Arrays.asList("sign");
             List<String> result = new ArrayList<>();
             String current = args[1].toLowerCase(Locale.ROOT);
             for (String s : base) {

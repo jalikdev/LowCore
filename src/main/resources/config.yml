@@ -257,10 +257,7 @@ itemedit:
   sign-format: "&8Signed by &a%signer%"
   sign-prefix: "&8Signed by"
 
-  sign-store-executor: true
-  sign-meta-format: "&8[Signed in LowCore by &7%player%&8]"
-  sign-meta-prefix: "&8[Signed in LowCore"
-
+  book-sign-title: "&fSigned Book"
   book-copy-title: true
 
   messages:
@@ -269,7 +266,7 @@ itemedit:
     player-only: "&cOnly players can use this command."
     no-item: "&cYou must hold an item in your main hand."
     no-itemmeta: "&cThis item cannot be edited."
-    usage: "&7Usage: &a/itemedit <name|resetname|lore|sign|unlockbook>"
+    usage: "&7Usage: &a/itemedit <name|resetname|lore|sign|book|unlockbook>"
     invalid-subcommand: "&cUnknown subcommand."
     invalid-number: "&cInvalid number."
 
@@ -284,12 +281,19 @@ itemedit:
     lore-set: "&aLore line updated."
     lore-cleared: "&aLore cleared."
 
-    sign-updated: "&aItem signed as &e%signer% &7(by %player%)."
+    sign-updated: "&aItem signed as &e%signer%."
+
+    sign-book-hint: "&cFor books, use &e/itemedit book sign <name>&c."
+
+    book-usage: "&7Usage: &a/itemedit book sign <author>"
+    book-sign-usage: "&7Usage: &a/itemedit book sign <author>"
+    book-not-book: "&cYou must hold a book to use this."
+    book-meta-missing: "&cCould not read book data."
+    book-signed: "&aBook signed as &e%author%."
 
     unlockbook-not-written: "&cYou must hold a signed book to unlock it."
-    unlockbook-failed: "&cFailed to read book data."
+    unlockbook-failed: "&cFailed to unlock this book."
     unlockbook-success: "&aBook unlocked. You can edit it again."
-
 
 
 
