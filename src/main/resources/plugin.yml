@@ -229,3 +229,6 @@ permissions:
   lowcore.world.create:
     description: Allows creating new worlds via GUI
     default: op
+  lowcore.world.delete:
+    description: Allows deleting worlds via GUI (shift-click)
+    default: op

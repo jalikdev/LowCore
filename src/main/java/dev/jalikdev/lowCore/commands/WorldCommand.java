@@ -3,6 +3,7 @@ package dev.jalikdev.lowCore.commands;
 import dev.jalikdev.lowCore.LowCore;
 import dev.jalikdev.lowCore.world.WorldCreationSession;
 import dev.jalikdev.lowCore.world.WorldCreationSession.State;
+import dev.jalikdev.lowCore.world.WorldInventoryManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -18,6 +19,7 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
@@ -25,6 +27,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.io.File;
 import java.util.*;
 
 public class WorldCommand implements CommandExecutor, TabExecutor, Listener {
@@ -33,13 +36,16 @@ public class WorldCommand implements CommandExecutor, TabExecutor, Listener {
     private static final int SLOT_WORLD_TYPE = 12;
     private static final int SLOT_GAMEMODE = 14;
     private static final int SLOT_SEED = 16;
+    private static final int SLOT_INVENTORY = 20;
     private static final int SLOT_CREATE = 22;
 
     private final LowCore plugin;
+    private final WorldInventoryManager inventoryManager;
     private final Map<UUID, WorldCreationSession> sessions = new HashMap<>();
 
     public WorldCommand(LowCore plugin) {
         this.plugin = plugin;
+        this.inventoryManager = plugin.getWorldInventoryManager();
     }
 
     private String getMainGuiTitle() {
@@ -48,6 +54,33 @@ public class WorldCommand implements CommandExecutor, TabExecutor, Listener {
 
     private String getSetupGuiTitleBase() {
         return plugin.getMessageRaw("world.gui-setup-title");
+    }
+
+    private String getGroupKeyForWorld(String worldName) {
+        String path = "world.worlds." + worldName + ".shared-inventory";
+        boolean shared = plugin.getConfig().getBoolean(path, true);
+        return shared ? "shared" : worldName;
+    }
+
+    private String getGroupKeyForNewWorld(String worldName, boolean sharedInventory) {
+        return sharedInventory ? "shared" : worldName;
+    }
+
+    private boolean isProtectedWorld(String worldName) {
+        List<String> protectedList = plugin.getConfig().getStringList("world.protected-worlds");
+        if (protectedList == null) {
+            protectedList = new ArrayList<>();
+        }
+        if (!protectedList.contains("world")) {
+            protectedList.add("world");
+        }
+        if (!protectedList.contains("world_nether")) {
+            protectedList.add("world_nether");
+        }
+        if (!protectedList.contains("world_the_end")) {
+            protectedList.add("world_the_end");
+        }
+        return protectedList.contains(worldName);
     }
 
     @Override
@@ -95,6 +128,9 @@ public class WorldCommand implements CommandExecutor, TabExecutor, Listener {
             meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("world.gui-create-button-name", "&aCreate new world")));
             List<String> lore = new ArrayList<>();
             lore.add(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("world.gui-create-button-lore", "&7Create a new world")));
+            if (player.hasPermission("lowcore.world.delete")) {
+                lore.add(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("world.gui-delete-hint", "&7Shift-Click on a world to delete it")));
+            }
             meta.setLore(lore);
             meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             createItem.setItemMeta(meta);
@@ -123,8 +159,18 @@ public class WorldCommand implements CommandExecutor, TabExecutor, Listener {
         lore.add(ChatColor.GRAY + "WorldType: " + world.getWorldType().name());
         lore.add(ChatColor.translateAlternateColorCodes('&',
                 plugin.getConfig().getString("world.gui-world-item-lore-click", "&eClick to teleport to the world spawn")));
-        meta.setLore(lore);
+        if (plugin.getConfig().getBoolean("world.show-gamemode-in-lore", true)) {
+            String gmPath = "world.worlds." + world.getName() + ".gamemode";
+            String gmName = plugin.getConfig().getString(gmPath, "DEFAULT");
+            lore.add(ChatColor.GRAY + "Gamemode: " + gmName);
+        }
+        if (plugin.getConfig().getBoolean("world.show-shared-inventory-in-lore", true)) {
+            String invPath = "world.worlds." + world.getName() + ".shared-inventory";
+            boolean shared = plugin.getConfig().getBoolean(invPath, true);
+            lore.add(ChatColor.GRAY + "Shared inventory: " + shared);
+        }
 
+        meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         item.setItemMeta(meta);
         return item;
@@ -155,12 +201,14 @@ public class WorldCommand implements CommandExecutor, TabExecutor, Listener {
         ItemStack typeItem = createWorldTypeItem(session);
         ItemStack gmItem = createGamemodeItem(session);
         ItemStack seedItem = createSeedItem(session);
+        ItemStack inventoryItem = createInventorySharedItem(session);
         ItemStack createItem = createCreateButtonItem();
 
         inv.setItem(SLOT_ENVIRONMENT, envItem);
         inv.setItem(SLOT_WORLD_TYPE, typeItem);
         inv.setItem(SLOT_GAMEMODE, gmItem);
         inv.setItem(SLOT_SEED, seedItem);
+        inv.setItem(SLOT_INVENTORY, inventoryItem);
         inv.setItem(SLOT_CREATE, createItem);
 
         player.openInventory(inv);
@@ -236,6 +284,25 @@ public class WorldCommand implements CommandExecutor, TabExecutor, Listener {
         return item;
     }
 
+    private ItemStack createInventorySharedItem(WorldCreationSession session) {
+        boolean shared = session.isSharedInventory();
+        Material material = shared ? Material.CHEST : Material.ENDER_CHEST;
+        String state = shared ? "Shared" : "Separated";
+
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.AQUA + "Inventory: " + state);
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.translateAlternateColorCodes('&',
+                plugin.getConfig().getString("world.gui-inventory-item-lore1", "&7Click to toggle inventory mode")));
+        lore.add(ChatColor.translateAlternateColorCodes('&',
+                plugin.getConfig().getString("world.gui-inventory-item-lore2", "&7Shared: same inventory across worlds")));
+        meta.setLore(lore);
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        item.setItemMeta(meta);
+        return item;
+    }
+
     private ItemStack createCreateButtonItem() {
         ItemStack item = new ItemStack(Material.EMERALD_BLOCK);
         ItemMeta meta = item.getItemMeta();
@@ -272,13 +339,13 @@ public class WorldCommand implements CommandExecutor, TabExecutor, Listener {
         }
 
         if (title.startsWith(mainTitle)) {
-            handleMainGuiClick(player, current);
+            handleMainGuiClick(player, current, event.getClick());
         } else if (title.startsWith(setupBase)) {
             handleSetupGuiClick(player, event.getRawSlot());
         }
     }
 
-    private void handleMainGuiClick(Player player, ItemStack current) {
+    private void handleMainGuiClick(Player player, ItemStack current, ClickType clickType) {
         if (!current.hasItemMeta() || !current.getItemMeta().hasDisplayName()) {
             return;
         }
@@ -305,11 +372,25 @@ public class WorldCommand implements CommandExecutor, TabExecutor, Listener {
             return;
         }
 
+        if (clickType.isShiftClick() && player.hasPermission("lowcore.world.delete")) {
+            deleteWorld(player, world);
+            return;
+        }
+
+        String fromWorld = player.getWorld().getName();
+        String fromGroup = getGroupKeyForWorld(fromWorld);
+        inventoryManager.savePlayerInventory(player, fromGroup);
+
         Location spawn = world.getSpawnLocation();
         if (spawn == null) {
             spawn = new Location(world, 0.5, world.getHighestBlockYAt(0, 0) + 1, 0.5);
         }
         player.teleport(spawn);
+
+        String toGroup = getGroupKeyForWorld(world.getName());
+        inventoryManager.loadPlayerInventory(player, toGroup);
+
+        applyWorldGamemode(player, world.getName());
         LowCore.sendConfigMessage(player, "world.teleport-success", "world", world.getName());
     }
 
@@ -333,6 +414,9 @@ public class WorldCommand implements CommandExecutor, TabExecutor, Listener {
             session.setState(State.AWAITING_SEED);
             player.closeInventory();
             LowCore.sendConfigMessage(player, "world.chat-seed-prompt");
+        } else if (slot == SLOT_INVENTORY) {
+            session.setSharedInventory(!session.isSharedInventory());
+            openSetupGui(player);
         } else if (slot == SLOT_CREATE) {
             createWorldFromSession(player, session);
         }
@@ -394,11 +478,23 @@ public class WorldCommand implements CommandExecutor, TabExecutor, Listener {
             creator.seed(session.getSeed());
         }
 
+        String fromWorld = player.getWorld().getName();
+        String fromGroup = getGroupKeyForWorld(fromWorld);
+        inventoryManager.savePlayerInventory(player, fromGroup);
+
         World world = creator.createWorld();
         if (world == null) {
             LowCore.sendConfigMessage(player, "world.create-failed");
             return;
         }
+
+        String basePath = "world.worlds." + name;
+        plugin.getConfig().set(basePath + ".gamemode", session.getGameMode().name());
+        plugin.getConfig().set(basePath + ".shared-inventory", session.isSharedInventory());
+        plugin.saveConfig();
+
+        String toGroup = getGroupKeyForNewWorld(name, session.isSharedInventory());
+        inventoryManager.loadPlayerInventory(player, toGroup);
 
         Location spawn = world.getSpawnLocation();
         if (spawn == null) {
@@ -409,6 +505,78 @@ public class WorldCommand implements CommandExecutor, TabExecutor, Listener {
         player.setGameMode(session.getGameMode());
         LowCore.sendConfigMessage(player, "world.create-success", "world", name);
         sessions.remove(player.getUniqueId());
+    }
+
+    private void applyWorldGamemode(Player player, String worldName) {
+        String path = "world.worlds." + worldName + ".gamemode";
+        String gmString = plugin.getConfig().getString(path, null);
+        if (gmString == null || gmString.equalsIgnoreCase("DEFAULT")) {
+            return;
+        }
+        try {
+            GameMode gm = GameMode.valueOf(gmString.toUpperCase(Locale.ROOT));
+            player.setGameMode(gm);
+        } catch (IllegalArgumentException ignored) {
+        }
+    }
+
+    private void deleteWorld(Player player, World world) {
+        String mainWorldName = Bukkit.getWorlds().get(0).getName();
+        if (world.getName().equals(mainWorldName) || isProtectedWorld(world.getName())) {
+            LowCore.sendConfigMessage(player, "world.delete-main-deny");
+            return;
+        }
+
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (p.getWorld().equals(world)) {
+                World fallback = Bukkit.getWorld(mainWorldName);
+                String fromGroup = getGroupKeyForWorld(world.getName());
+                inventoryManager.savePlayerInventory(p, fromGroup);
+
+                Location spawn = fallback.getSpawnLocation();
+                if (spawn == null) {
+                    spawn = new Location(fallback, 0.5, fallback.getHighestBlockYAt(0, 0) + 1, 0.5);
+                }
+                p.teleport(spawn);
+
+                String toGroup = getGroupKeyForWorld(fallback.getName());
+                inventoryManager.loadPlayerInventory(p, toGroup);
+                applyWorldGamemode(p, fallback.getName());
+            }
+        }
+
+        boolean unloaded = Bukkit.unloadWorld(world, true);
+        if (!unloaded) {
+            LowCore.sendConfigMessage(player, "world.delete-unload-failed");
+            return;
+        }
+
+        File folder = world.getWorldFolder();
+        deleteFolder(folder);
+
+        String basePath = "world.worlds." + world.getName();
+        if (plugin.getConfig().contains(basePath)) {
+            plugin.getConfig().set(basePath, null);
+            plugin.saveConfig();
+        }
+
+        LowCore.sendConfigMessage(player, "world.delete-success", "world", world.getName());
+        openMainGui(player);
+    }
+
+    private void deleteFolder(File file) {
+        if (file == null || !file.exists()) {
+            return;
+        }
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File child : files) {
+                    deleteFolder(child);
+                }
+            }
+        }
+        file.delete();
     }
 
     @EventHandler

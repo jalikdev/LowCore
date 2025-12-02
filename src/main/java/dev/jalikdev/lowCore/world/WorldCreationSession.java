@@ -21,6 +21,7 @@ public class WorldCreationSession {
     private GameMode gameMode;
     private Long seed;
     private State state;
+    private boolean sharedInventory;
 
     public WorldCreationSession(UUID playerId) {
         this.playerId = playerId;
@@ -29,6 +30,7 @@ public class WorldCreationSession {
         this.gameMode = GameMode.SURVIVAL;
         this.seed = null;
         this.state = State.AWAITING_NAME;
+        this.sharedInventory = true;
     }
 
     public UUID getPlayerId() {
@@ -81,5 +83,13 @@ public class WorldCreationSession {
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    public boolean isSharedInventory() {
+        return sharedInventory;
+    }
+
+    public void setSharedInventory(boolean sharedInventory) {
+        this.sharedInventory = sharedInventory;
     }
 }

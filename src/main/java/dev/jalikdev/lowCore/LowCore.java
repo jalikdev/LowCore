@@ -8,6 +8,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import dev.jalikdev.lowCore.listeners.JoinQuitListener;
 import dev.jalikdev.lowCore.listeners.MotdListener;
 import dev.jalikdev.lowCore.performance.*;
+import dev.jalikdev.lowCore.world.WorldInventoryManager;
+import dev.jalikdev.lowCore.commands.WorldCommand;
 
 import dev.jalikdev.lowCore.database.DatabaseManager;
 import dev.jalikdev.lowCore.database.LastLocationRepository;
@@ -21,6 +23,8 @@ import java.util.Objects;
 public class LowCore extends JavaPlugin {
 
     public static final String DEFAULT_PREFIX = "&8[&aLowCore&8] &7";
+
+    private WorldInventoryManager worldInventoryManager;
 
     private static LowCore instance;
     private String prefix;
@@ -58,6 +62,7 @@ public class LowCore extends JavaPlugin {
             e.printStackTrace();
         }
 
+        worldInventoryManager = new WorldInventoryManager(this);
         lastLocationRepository = new LastLocationRepository(databaseManager);
         offlineInventoryRepository = new OfflineInventoryRepository(databaseManager);
 
@@ -287,4 +292,7 @@ public class LowCore extends JavaPlugin {
         return offlineInventoryRepository;
     }
 
+    public WorldInventoryManager getWorldInventoryManager() {
+        return worldInventoryManager;
+    }
 }
