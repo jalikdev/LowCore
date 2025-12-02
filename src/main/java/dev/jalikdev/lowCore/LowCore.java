@@ -154,6 +154,11 @@ public class LowCore extends JavaPlugin {
         Objects.requireNonNull(getCommand("lowcoreadmin")).setExecutor(adminCommand);
         Objects.requireNonNull(getCommand("lowcoreadmin")).setTabCompleter(adminCommand);
 
+        WorldCommand worldCommand = new WorldCommand(this);
+        Objects.requireNonNull(getCommand("world")).setExecutor(worldCommand);
+        Objects.requireNonNull(getCommand("world")).setTabCompleter(worldCommand);
+        getServer().getPluginManager().registerEvents(worldCommand, this);
+
 
         if (getConfig().getBoolean("update-checker.enabled", true)) {
             new UpdateChecker(this).checkForUpdates();

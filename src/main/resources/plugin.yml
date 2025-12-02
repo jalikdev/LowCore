@@ -137,6 +137,11 @@ commands:
     permission: lowcore.admin
     aliases: [ lca ]
 
+  world:
+    description: Open the world GUI
+    usage: /world
+    permission: lowcore.world
+
 
 # -------------------------------------------------
 # PERMISSIONS
@@ -216,4 +221,11 @@ permissions:
 
   lowcore.admin:
     description: Allows using the LowCore admin/settings command
+    default: op
+
+  lowcore.world:
+    description: Allows opening the world GUI and teleporting between worlds
+    default: op
+  lowcore.world.create:
+    description: Allows creating new worlds via GUI
     default: op

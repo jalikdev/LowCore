@@ -248,3 +248,38 @@ lastlogout:
     coords: "&7World: &e%world% &7| X: &e%x% &7Y: &e%y% &7Z: &e%z%"
     tp-hint: "&7You can teleport there with &a/tp %x% %y% %z%&7."
 
+# ======================
+# WorldMenu
+# ======================
+
+world:
+  messages:
+    gui-main-title: "&2Worlds"
+    gui-setup-title: "&2New world"
+    no-permission: "&cYou do not have permission to use this command."
+    no-create-permission: "&cYou are not allowed to create new worlds."
+    chat-name-prompt: "&7Please type the name of the new world in chat."
+    session-error: "&cAn error occurred with your world creation session."
+    world-missing: "&cThis world no longer exists."
+    teleport-success: "&aTeleported to the spawn of &e%world%&a."
+    no-name: "&cNo world name set."
+    name-empty: "&cThe world name cannot be empty."
+    name-already-exists: "&cA world with this name already exists."
+    chat-seed-prompt: "&7Please type the seed in chat (number) or &e'random'&7."
+    seed-random: "&aSeed will be generated randomly."
+    seed-set: "&aSeed set to &e%seed%&a."
+    seed-invalid: "&cInvalid seed. Please enter a number or 'random'."
+    create-failed: "&cThe world could not be created."
+    create-success: "&aWorld &e%world%&a has been created."
+    name-set: "&aWorld name set to &e%world%&a."
+
+  gui-create-button-name: "&aCreate new world"
+  gui-create-button-lore: "&7Create a new world"
+  gui-world-item-lore-click: "&eClick to teleport to the world spawn"
+  gui-environment-item-lore: "&7Click to cycle environment"
+  gui-worldtype-item-lore: "&7Click to cycle world type"
+  gui-gamemode-item-lore: "&7Click to cycle gamemode"
+  gui-seed-item-lore1: "&7Click to set seed via chat"
+  gui-seed-item-lore2: "&7Type 'random' for a random seed"
+  gui-create-final-name: "&aCreate world"
+  gui-create-final-lore: "&eClick to generate the world"
