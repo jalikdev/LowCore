@@ -168,6 +168,10 @@ public class LowCore extends JavaPlugin {
         Objects.requireNonNull(getCommand("itemedit")).setExecutor(itemEditCommand);
         Objects.requireNonNull(getCommand("itemedit")).setTabCompleter(itemEditCommand);
 
+        NightVisionCommand nightVisionCommand = new NightVisionCommand(this);
+        Objects.requireNonNull(getCommand("nightvision")).setExecutor(nightVisionCommand);
+        getServer().getPluginManager().registerEvents(nightVisionCommand, this);
+
 
         if (getConfig().getBoolean("update-checker.enabled", true)) {
             new UpdateChecker(this).checkForUpdates();

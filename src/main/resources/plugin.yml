@@ -148,6 +148,12 @@ commands:
     permission: lowcore.itemedit
     permission-message: "&cYou do not have permission to use this command."
 
+  nightvision:
+    description: Toggle hidden fullbright night vision
+    usage: /nightvision
+    aliases: [ nv, fullbright ]
+    permission: lowcore.nightvision
+
 
 # -------------------------------------------------
 # PERMISSIONS
@@ -237,4 +243,8 @@ permissions:
     default: op
   lowcore.world.delete:
     description: Allows deleting worlds via GUI (shift-click)
+    default: op
+
+  lowcore.nightvision:
+    description: Allows using /nightvision
     default: op
