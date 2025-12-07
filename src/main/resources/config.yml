@@ -178,6 +178,7 @@ vanish:
     disabled: "&eYou are now visible."
     fake-join: "&a+ &7%player%"
     fake-quit: "&c- &7%player%"
+    actionbar: "&a&lVANISH &7You are invisible."
 
 # ======================
 # GodMode

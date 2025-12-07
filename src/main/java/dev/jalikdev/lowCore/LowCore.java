@@ -2,6 +2,7 @@ package dev.jalikdev.lowCore;
 
 import dev.jalikdev.lowCore.commands.*;
 import dev.jalikdev.lowCore.performance.PerformanceMonitor;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -117,8 +118,9 @@ public class LowCore extends JavaPlugin {
         Objects.requireNonNull(getCommand("workbench")).setExecutor(craftCommand);
 
         VanishCommand vanishCommand = new VanishCommand(this);
-        Objects.requireNonNull(getCommand("vanish")).setExecutor(vanishCommand);
-        getServer().getPluginManager().registerEvents(vanishCommand, this);
+        getCommand("vanish").setExecutor(vanishCommand);
+        Bukkit.getPluginManager().registerEvents(vanishCommand, this);
+        vanishCommand.startActionbarTask();
 
         SpeedCommand speedCommand = new SpeedCommand();
         Objects.requireNonNull(getCommand("speed")).setExecutor(speedCommand);
