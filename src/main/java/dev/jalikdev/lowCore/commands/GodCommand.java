@@ -19,26 +19,28 @@ public class GodCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
                              @NotNull String label, @NotNull String[] args) {
 
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)){
             LowCore.sendConfigMessage(sender, "player-only");
             return true;
         }
-        Player player = (Player) sender;
 
-        if (!player.hasPermission("lowcore.god")) {
-            LowCore.sendConfigMessage(player, "no-permission");
+        if (!(sender.hasPermission("lowcore.god"))) {
+            LowCore.sendConfigMessage(sender, "no-permission");
             return true;
         }
 
-        if (godMode.contains(player.getUniqueId())) {
-            godMode.remove(player.getUniqueId());
+        UUID uuid = player.getUniqueId();
+
+        if(godMode.contains(uuid)) {
+            godMode.remove(uuid);
             player.setInvulnerable(false);
             LowCore.sendConfigMessage(player, "godmode.disabled");
         } else {
-            godMode.add(player.getUniqueId());
+            godMode.add(uuid);
             player.setInvulnerable(true);
             LowCore.sendConfigMessage(player, "godmode.enabled");
         }
+
         return true;
     }
 }
