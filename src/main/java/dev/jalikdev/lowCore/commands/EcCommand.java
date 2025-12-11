@@ -12,6 +12,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import net.kyori.adventure.text.Component;
+import dev.jalikdev.lowCore.utils.*;
 
 import java.util.*;
 
@@ -31,7 +33,7 @@ public class EcCommand implements CommandExecutor, TabCompleter, Listener {
                              @NotNull String[] args) {
 
         if (args.length == 0) {
-            if (!(sender instanceof Player)) {
+            if (!(sender instanceof Player player)) {
                 LowCore.sendConfigMessage(sender, "ec.console-usage");
                 return true;
             }
@@ -41,7 +43,6 @@ public class EcCommand implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
 
-            Player player = (Player) sender;
             player.openInventory(player.getEnderChest());
             LowCore.sendConfigMessage(sender, "ec.self-open");
             return true;
@@ -52,12 +53,11 @@ public class EcCommand implements CommandExecutor, TabCompleter, Listener {
             return true;
         }
 
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player viewer)) {
             LowCore.sendConfigMessage(sender, "player-only");
             return true;
         }
 
-        Player viewer = (Player) sender;
         String targetName = args[0];
 
         Player target = Bukkit.getPlayerExact(targetName);
@@ -68,7 +68,7 @@ public class EcCommand implements CommandExecutor, TabCompleter, Listener {
         }
 
         OfflinePlayer offline = Bukkit.getOfflinePlayer(targetName);
-        if ((offline == null || !offline.hasPlayedBefore()) && !offline.isOnline()) {
+        if ((!offline.hasPlayedBefore()) && !offline.isOnline()) {
             LowCore.sendConfigMessage(sender, "unknown-player");
             return true;
         }
@@ -79,7 +79,12 @@ public class EcCommand implements CommandExecutor, TabCompleter, Listener {
             return true;
         }
 
-        Inventory inv = Bukkit.createInventory(viewer, 27, "§8EnderChest §7- §a" + offline.getName() + " §7(offline)");
+        Inventory inv = Bukkit.createInventory(
+                viewer,
+                27,
+                Component.text("&8EnderChest &7- &a" + offline.getName() + " &7(offline)")
+        );
+
         inv.setContents(data);
 
         offlineEcViews.put(inv, offline.getUniqueId());
@@ -110,15 +115,7 @@ public class EcCommand implements CommandExecutor, TabCompleter, Listener {
                                                 @NotNull String[] args) {
 
         if (args.length == 1 && sender.hasPermission("lowcore.ec.others")) {
-            String current = args[0].toLowerCase();
-            List<String> result = new ArrayList<>();
-
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                if (p.getName().toLowerCase().startsWith(current)) {
-                    result.add(p.getName());
-                }
-            }
-            return result;
+            return CompletionUtil.onlinePlayers(args[0]);
         }
 
         return Collections.emptyList();
