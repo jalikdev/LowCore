@@ -20,7 +20,7 @@ public class AnvilCommand implements CommandExecutor {
             return true;
         }
 
-        if (!(sender.hasPermission("lowcore.ec") || !sender.isOp())) {
+        if (!(sender.hasPermission("lowcore.ec"))) {
             LowCore.sendConfigMessage(sender, "no-permission");
             return true;
         }

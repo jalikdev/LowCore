@@ -20,7 +20,7 @@ public class CraftCommand implements CommandExecutor {
             return true;
         }
 
-        if (!player.hasPermission("lowcore.craft") || !player.isOp()) {
+        if (!player.hasPermission("lowcore.craft")) {
             LowCore.sendConfigMessage(player, "no-permission");
             return true;
         }
