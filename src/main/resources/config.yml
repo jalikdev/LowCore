@@ -56,7 +56,14 @@ messages:
   no-permission: "&cYou do not have permission!"
   player-only: "&cOnly players can use this command!"
   unknown-player: "&cThis player is not online."
-  craft-opened: "&aCrafting table opened!"
+
+# ======================
+# Base Command
+# ======================
+misc:
+  messages:
+    craft-opened: "&aCrafting table opened!"
+    anvil-opened: "&aAnvil opened!"
 
 # ======================
 # Base Command

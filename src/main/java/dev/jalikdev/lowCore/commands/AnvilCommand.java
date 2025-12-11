@@ -1,11 +1,12 @@
 package dev.jalikdev.lowCore.commands;
 
-import org.bukkit.Location;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import dev.jalikdev.lowCore.LowCore;
+import org.bukkit.event.inventory.InventoryType;
 import org.jetbrains.annotations.NotNull;
 
 public class AnvilCommand implements CommandExecutor {
@@ -14,22 +15,19 @@ public class AnvilCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
                              @NotNull String label, @NotNull String[] args) {
 
-        if (!(sender instanceof Player)) {
-            LowCore.sendConfigMessage(sender, "messages.player-only");
+        if (!(sender instanceof Player player)) {
+            LowCore.sendConfigMessage(sender, "player-only");
             return true;
         }
 
-        Player player = (Player) sender;
-
-        if (!player.hasPermission("lowcore.anvil")) {
-            LowCore.sendConfigMessage(player, "messages.no-permission");
+        if (!(sender.hasPermission("lowcore.ec") || !sender.isOp())) {
+            LowCore.sendConfigMessage(sender, "no-permission");
             return true;
         }
 
-        Location loc = player.getLocation();
-        player.openAnvil(loc, true);
+        player.openInventory(Bukkit.createInventory(player, InventoryType.ANVIL));
 
-        LowCore.sendMessage(player, "&aAnvil interface opened.");
+        LowCore.sendConfigMessage(player, "misc.anvil-opened");
         return true;
     }
 }
