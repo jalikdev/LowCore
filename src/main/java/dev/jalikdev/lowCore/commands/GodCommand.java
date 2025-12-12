@@ -48,18 +48,30 @@ public class GodCommand implements CommandExecutor, TabCompleter {
         } else if (args.length > 1) {
         LowCore.sendMessage(player, "&cUsage: &e/god [player]");
         return true;
-    }
+        }
 
         UUID uuid = target.getUniqueId();
+        boolean other = args.length == 1;
+
 
         if(godMode.contains(uuid)) {
             godMode.remove(uuid);
             target.setInvulnerable(false);
-            LowCore.sendConfigMessage(target, "godmode.disabled");
+            if (other) {
+                LowCore.sendConfigMessage(target, "godmode.disabled-by", "player", sender.getName());
+                LowCore.sendConfigMessage(sender, "godmode.disabled-for", "target", target.getName());
+            } else {
+                LowCore.sendConfigMessage(target, "godmode.disabled");
+            }
         } else {
             godMode.add(uuid);
             target.setInvulnerable(true);
-            LowCore.sendConfigMessage(target, "godmode.enabled");
+            if (other) {
+                LowCore.sendConfigMessage(target, "godmode.enabled-by", "player", sender.getName());
+                LowCore.sendConfigMessage(sender, "godmode.enabled-for", "target", target.getName());
+            } else {
+                LowCore.sendConfigMessage(target, "godmode.enabled");
+            }
         }
 
         return true;

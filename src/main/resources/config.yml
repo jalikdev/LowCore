@@ -194,7 +194,11 @@ godmode:
   messages:
     disabled: "&eGod mode disabled."
     enabled: "&aGod mode enabled"
-
+    permission-others: "&eNo Permission to set others into GodMode"
+    enabled-by: "&aGodMode enabled by %player%"
+    enabled-for: "&aGodMode enabled for %target%"
+    disabled-by: "&eGodMode disabled by %player%"
+    disabled-for: "&eGodMode disabled for %target%"
 # ======================
 # GodMode
 # ======================
