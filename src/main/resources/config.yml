@@ -64,6 +64,8 @@ misc:
   messages:
     craft-opened: "&aCrafting table opened!"
     anvil-opened: "&aAnvil opened!"
+    craft-permission-others: "&eNo permission to force open the CraftingTable for others!"
+    anvil-permission-others: "&eNo permission to force open the Anvil for others!"
 
 # ======================
 # Base Command

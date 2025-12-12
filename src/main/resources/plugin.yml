@@ -172,6 +172,27 @@ permissions:
     description: Use /gm
     default: op
 
+  lowcore.craft:
+    description: Open Crafting
+    default: op
+  lowcore.craft.others:
+    description: Open Crafting for others
+    default: op
+
+  lowcore.anvil:
+    description: Open Anvil
+    default: op
+  lowcore.anvil.others:
+    description: Open a Anvil for others
+    default: op
+
+  lowcore.godmode:
+    description: Make yourself invincible
+    default: op
+  lowcore.godmode.others:
+    description: Make someone invincible
+    default: op
+
   lowcore.ec:
     description: Open your ender chest
     default: op

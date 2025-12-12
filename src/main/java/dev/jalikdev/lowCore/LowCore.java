@@ -108,6 +108,7 @@ public class LowCore extends JavaPlugin {
 
         AnvilCommand anvilCommand = new AnvilCommand();
         Objects.requireNonNull(getCommand("anvil")).setExecutor(anvilCommand);
+        Objects.requireNonNull(getCommand("anvil")).setTabCompleter(anvilCommand);
 
         RepairCommand repairCommand = new RepairCommand();
         Objects.requireNonNull(getCommand("repair")).setExecutor(repairCommand);
@@ -116,6 +117,8 @@ public class LowCore extends JavaPlugin {
         CraftCommand craftCommand = new CraftCommand();
         Objects.requireNonNull(getCommand("craft")).setExecutor(craftCommand);
         Objects.requireNonNull(getCommand("workbench")).setExecutor(craftCommand);
+        Objects.requireNonNull(getCommand("craft")).setTabCompleter(craftCommand);
+        Objects.requireNonNull(getCommand("workbench")).setTabCompleter(craftCommand);
 
         VanishCommand vanishCommand = new VanishCommand(this);
         getCommand("vanish").setExecutor(vanishCommand);
@@ -128,6 +131,8 @@ public class LowCore extends JavaPlugin {
 
         GodCommand godCommand = new GodCommand();
         Objects.requireNonNull(getCommand("god")).setExecutor(godCommand);
+        Objects.requireNonNull(getCommand("god")).setTabCompleter(godCommand);
+
 
         KillAllCommand killAllCommand = new KillAllCommand();
         Objects.requireNonNull(getCommand("killall")).setExecutor(killAllCommand);
