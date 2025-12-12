@@ -1,17 +1,19 @@
 package dev.jalikdev.lowCore.commands;
 
+import dev.jalikdev.lowCore.utils.CompletionUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import dev.jalikdev.lowCore.LowCore;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
-public class GodCommand implements CommandExecutor {
+public class GodCommand implements CommandExecutor, TabCompleter {
 
     private final Set<UUID> godMode = new HashSet<>();
 
@@ -29,18 +31,50 @@ public class GodCommand implements CommandExecutor {
             return true;
         }
 
-        UUID uuid = player.getUniqueId();
+        Player target = player;
+
+        if (args.length == 1) {
+            if (!sender.hasPermission("lowcore.god.others")) {
+                LowCore.sendConfigMessage(sender, "godmode.permission-others");
+                return true;
+            }
+
+            Player t = Bukkit.getPlayerExact(args[0]);
+            if (t == null) {
+                LowCore.sendMessage(player, "&cPlayer not found!");
+                return true;
+            }
+            target = t;
+        } else if (args.length > 1) {
+        LowCore.sendMessage(player, "&cUsage: &e/god [player]");
+        return true;
+    }
+
+        UUID uuid = target.getUniqueId();
 
         if(godMode.contains(uuid)) {
             godMode.remove(uuid);
-            player.setInvulnerable(false);
-            LowCore.sendConfigMessage(player, "godmode.disabled");
+            target.setInvulnerable(false);
+            LowCore.sendConfigMessage(target, "godmode.disabled");
         } else {
             godMode.add(uuid);
-            player.setInvulnerable(true);
-            LowCore.sendConfigMessage(player, "godmode.enabled");
+            target.setInvulnerable(true);
+            LowCore.sendConfigMessage(target, "godmode.enabled");
         }
 
         return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender,
+                                                @NotNull Command command,
+                                                @NotNull String alias,
+                                                @NotNull String[] args) {
+
+        if (args.length == 1 && sender.hasPermission("lowcore.god.others")) {
+            return CompletionUtil.onlinePlayers(args[0]);
+        }
+
+        return Collections.emptyList();
     }
 }
