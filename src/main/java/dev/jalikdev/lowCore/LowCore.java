@@ -95,8 +95,10 @@ public class LowCore extends JavaPlugin {
         HealCommand healCommand = new HealCommand(this);
         Objects.requireNonNull(getCommand("heal")).setExecutor(healCommand);
 
-        FeedCommand feedCommand = new FeedCommand(this);
+        FeedCommand feedCommand = new FeedCommand();
         Objects.requireNonNull(getCommand("feed")).setExecutor(feedCommand);
+        Objects.requireNonNull(getCommand("feed")).setTabCompleter(feedCommand);
+
 
         SpawnMobCommand spawnMobCommand = new SpawnMobCommand(this);
         Objects.requireNonNull(getCommand("spawnmob")).setExecutor(spawnMobCommand);
