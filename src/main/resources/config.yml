@@ -107,7 +107,6 @@ invsee:
 # ======================
 ec:
   messages:
-    console-usage: "&cConsole must specify a player: &e/ec <player>"
     self-open: "&aOpened your ender chest."
     open-other: "&aOpened &e%target%'s &aender chest."
     offline-no-data: "&cNo offline ender chest data found for &e%target%&c."
@@ -270,101 +269,3 @@ lastlogout:
     header: "&7Last logout location of &a%player%&7:"
     coords: "&7World: &e%world% &7| X: &e%x% &7Y: &e%y% &7Z: &e%z%"
     tp-hint: "&7You can teleport there with &a/tp %x% %y% %z%&7."
-
-# ======================
-# ItemEdit
-# ======================
-itemedit:
-  enabled: true
-  permission: "lowcore.itemedit"
-
-  sign-format: "&8Signed by &a%signer%"
-  sign-prefix: "&8Signed by"
-
-  book-sign-title: "&fSigned Book"
-  book-copy-title: true
-
-  messages:
-    disabled: "&cItem edit is currently disabled."
-    no-permission: "&cYou do not have permission to use this command."
-    player-only: "&cOnly players can use this command."
-    no-item: "&cYou must hold an item in your main hand."
-    no-itemmeta: "&cThis item cannot be edited."
-    usage: "&7Usage: &a/itemedit <name|resetname|lore|sign|book|unlockbook>"
-    invalid-subcommand: "&cUnknown subcommand."
-    invalid-number: "&cInvalid number."
-
-    name-usage: "&7Usage: &a/itemedit name <new name>"
-    name-updated: "&aItem display name updated."
-    name-reset: "&aItem display name reset to default."
-
-    lore-usage: "&7Usage: &a/itemedit lore <add|set|clear> ..."
-    lore-add-usage: "&7Usage: &a/itemedit lore add <text>"
-    lore-set-usage: "&7Usage: &a/itemedit lore set <line> <text>"
-    lore-added: "&aLore line added."
-    lore-set: "&aLore line updated."
-    lore-cleared: "&aLore cleared."
-
-    sign-updated: "&aItem signed as &e%signer%."
-
-    sign-book-hint: "&cFor books, use &e/itemedit book sign <name>&c."
-
-    book-usage: "&7Usage: &a/itemedit book sign <author>"
-    book-sign-usage: "&7Usage: &a/itemedit book sign <author>"
-    book-not-book: "&cYou must hold a book to use this."
-    book-meta-missing: "&cCould not read book data."
-    book-signed: "&aBook signed as &e%author%."
-
-    unlockbook-not-written: "&cYou must hold a signed book to unlock it."
-    unlockbook-failed: "&cFailed to unlock this book."
-    unlockbook-success: "&aBook unlocked. You can edit it again."
-
-
-
-# ======================
-# WorldMenu
-# ======================
-world:
-  protected-worlds:
-    - world
-    - world_nether
-    - world_the_end
-
-  messages:
-    gui-main-title: "&2Worlds"
-    gui-setup-title: "&2New world"
-    no-permission: "&cYou do not have permission to use this command."
-    no-create-permission: "&cYou are not allowed to create new worlds."
-    chat-name-prompt: "&7Please type the name of the new world in chat."
-    session-error: "&cAn error occurred with your world creation session."
-    world-missing: "&cThis world no longer exists."
-    teleport-success: "&aTeleported to the spawn of &e%world%&a."
-    no-name: "&cNo world name set."
-    name-empty: "&cThe world name cannot be empty."
-    name-already-exists: "&cA world with this name already exists."
-    chat-seed-prompt: "&7Please type the seed in chat (number) or &e'random'&7."
-    seed-random: "&aSeed will be generated randomly."
-    seed-set: "&aSeed set to &e%seed%&a."
-    seed-invalid: "&cInvalid seed. Please enter a number or 'random'."
-    create-failed: "&cThe world could not be created."
-    create-success: "&aWorld &e%world%&a has been created."
-    name-set: "&aWorld name set to &e%world%&a."
-    delete-main-deny: "&cYou cannot delete this protected world."
-    delete-unload-failed: "&cThe world could not be unloaded. Deletion aborted."
-    delete-success: "&aWorld &e%world%&a has been deleted."
-
-  gui-create-button-name: "&aCreate new world"
-  gui-create-button-lore: "&7Create a new world"
-  gui-delete-hint: "&7Shift-Click a world item to delete it"
-  gui-world-item-lore-click: "&eClick to teleport to the world spawn"
-  gui-environment-item-lore: "&7Click to cycle environment"
-  gui-worldtype-item-lore: "&7Click to cycle world type"
-  gui-gamemode-item-lore: "&7Click to cycle gamemode"
-  gui-seed-item-lore1: "&7Click to set seed via chat"
-  gui-seed-item-lore2: "&7Type 'random' for a random seed"
-  gui-inventory-item-lore1: "&7Click to toggle inventory mode"
-  gui-inventory-item-lore2: "&7Shared: same inventory across worlds"
-  gui-create-final-name: "&aCreate world"
-  gui-create-final-lore: "&eClick to generate the world"
-  show-gamemode-in-lore: true
-  show-shared-inventory-in-lore: true

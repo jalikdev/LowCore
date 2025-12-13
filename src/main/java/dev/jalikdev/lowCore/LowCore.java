@@ -8,9 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import dev.jalikdev.lowCore.listeners.JoinQuitListener;
 import dev.jalikdev.lowCore.listeners.MotdListener;
-import dev.jalikdev.lowCore.performance.*;
 import dev.jalikdev.lowCore.world.WorldInventoryManager;
-import dev.jalikdev.lowCore.commands.WorldCommand;
 
 import dev.jalikdev.lowCore.database.DatabaseManager;
 import dev.jalikdev.lowCore.database.LastLocationRepository;
@@ -168,15 +166,6 @@ public class LowCore extends JavaPlugin {
         LowCoreAdminCommand adminCommand = new LowCoreAdminCommand(this);
         Objects.requireNonNull(getCommand("lowcoreadmin")).setExecutor(adminCommand);
         Objects.requireNonNull(getCommand("lowcoreadmin")).setTabCompleter(adminCommand);
-
-        WorldCommand worldCommand = new WorldCommand(this);
-        Objects.requireNonNull(getCommand("world")).setExecutor(worldCommand);
-        Objects.requireNonNull(getCommand("world")).setTabCompleter(worldCommand);
-        getServer().getPluginManager().registerEvents(worldCommand, this);
-
-        ItemEditCommand itemEditCommand = new ItemEditCommand(this);
-        Objects.requireNonNull(getCommand("itemedit")).setExecutor(itemEditCommand);
-        Objects.requireNonNull(getCommand("itemedit")).setTabCompleter(itemEditCommand);
 
         NightVisionCommand nightVisionCommand = new NightVisionCommand(this);
         Objects.requireNonNull(getCommand("nightvision")).setExecutor(nightVisionCommand);
