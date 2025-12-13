@@ -66,6 +66,8 @@ misc:
     anvil-opened: "&aAnvil opened!"
     craft-permission-others: "&eNo permission to force open the CraftingTable for others!"
     anvil-permission-others: "&eNo permission to force open the Anvil for others!"
+    nv-enabled: "&aNightVision enabled!"
+    nv-disabled: "&eNightVision disabled!"
 
 # ======================
 # Base Command
@@ -211,7 +213,7 @@ godmode:
     disabled-by: "&eGodMode disabled by %player%"
     disabled-for: "&eGodMode disabled for %target%"
 # ======================
-# GodMode
+# Update Checker
 # ======================
 update-checker:
   enebled: true
@@ -226,22 +228,19 @@ performance:
   show-mspt: true
   show-chunks: true
 
-# ======================
-# Clean Up
-# ======================
-lag-cleanup:
-  enabled: true
-  confirm-required: true
-
-# ======================
-# Performance
-# ======================
 performance-monitor:
   enabled: true
   warn-tps: 18.0
   severe-tps: 15.0
   check-interval-seconds: 10
   cooldown-seconds: 60
+
+# ======================
+# Clean Up
+# ======================
+lag-cleanup:
+  enabled: true
+  confirm-required: true
 
 # ======================
 # Sudo
