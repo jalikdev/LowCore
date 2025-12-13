@@ -35,7 +35,7 @@ public class FeedCommand implements CommandExecutor, TabCompleter {
         Player target = player;
 
         if (other) {
-            if (!sender.hasPermission("lowcore.feed.other")) {
+            if (!sender.hasPermission("lowcore.feed.others")) {
                 LowCore.sendConfigMessage(sender, "feed.no-permission-others");
                 return true;
             }
@@ -69,7 +69,7 @@ public class FeedCommand implements CommandExecutor, TabCompleter {
                                                 @NotNull String alias,
                                                 @NotNull String[] args) {
 
-        if (args.length == 1 && sender.hasPermission("lowcore.craft.others")) {
+        if (args.length == 1 && sender.hasPermission("lowcore.feed.others")) {
             return CompletionUtil.onlinePlayers(args[0]);
         }
 

@@ -124,6 +124,7 @@ heal:
     target: "&aYou have been healed by &f%healer%!"
     no-permission: "&cYou don't have permission to use this command."
     player-not-found: "&cThat player is not online."
+    no-permission-others: "&cYou don't have permission to heal others."
 
 feed:
   messages:

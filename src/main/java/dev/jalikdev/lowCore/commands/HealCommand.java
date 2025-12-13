@@ -1,65 +1,78 @@
 package dev.jalikdev.lowCore.commands;
 
+import dev.jalikdev.lowCore.utils.CompletionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import dev.jalikdev.lowCore.LowCore;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class HealCommand implements CommandExecutor {
+import java.util.Collections;
+import java.util.List;
 
-    private final LowCore plugin;
-
-    public HealCommand(LowCore plugin) {
-        this.plugin = plugin;
-    }
+public class HealCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender,
                              @NotNull Command command,
                              @NotNull String label,
                              @NotNull String[] args) {
-        if (args.length == 0) {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage("&cOnly players can use this command.");
+        if (!(sender instanceof Player player)) {
+            LowCore.sendConfigMessage(sender, "player-only");
+            return true;
+        }
+
+        if (!sender.hasPermission("lowcore.heal")) {
+            LowCore.sendMessage(sender, "no-permission");
+            return true;
+        }
+
+        boolean other = args.length == 1;
+        Player target = player;
+
+        if (other) {
+            if (!sender.hasPermission("lowcore.heal.others")) {
+                LowCore.sendConfigMessage(sender, "heal.no-permission-others");
                 return true;
             }
-
-            Player player = (Player) sender;
-
-            if (!player.hasPermission("lowcore.heal")) {
-                LowCore.sendConfigMessage(player, "heal.noPermission");
+            Player t  = Bukkit.getPlayerExact(args[0]);
+            if (t == null) {
+                LowCore.sendMessage(sender, "unknown-player");
                 return true;
             }
-
-            player.setHealth(player.getMaxHealth());
-            player.setFireTicks(0);
-            LowCore.sendConfigMessage(player, "heal.self");
+            target = t;
+        } else if (args.length > 1) {
+            LowCore.sendMessage(sender, "Usage: /lowcore heal [player]");
             return true;
         }
 
-        if (!sender.hasPermission("lowcore.heal.others")) {
-            LowCore.sendConfigMessage(sender, "heal.no-permission");
-            return true;
+        target.setFoodLevel(20);
+        target.setSaturation(20);
+
+        if (other) {
+            LowCore.sendConfigMessage(sender, "heal.other", "player", target.getName());
+            LowCore.sendConfigMessage(target, "heal.target",  "healer", sender.getName());
+        } else  {
+            LowCore.sendConfigMessage(sender, "heal.self");
         }
-
-        Player target = Bukkit.getPlayer(args[0]);
-        if (target == null) {
-            LowCore.sendConfigMessage(sender, "heal.player-not-found");
-            return true;
-        }
-
-        target.setHealth(target.getMaxHealth());
-        target.setFireTicks(0);
-
-        String msgOther = plugin.formatMessage("heal.other", "player", target.getName());
-        String msgTarget = plugin.formatMessage("heal.target", "healer", sender.getName());
-
-        sender.sendMessage(msgOther);
-        target.sendMessage(msgTarget);
 
         return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender,
+                                                @NotNull Command command,
+                                                @NotNull String alias,
+                                                @NotNull String[] args) {
+
+        if (args.length == 1 && sender.hasPermission("lowcore.heal.others")) {
+            return CompletionUtil.onlinePlayers(args[0]);
+        }
+
+        return Collections.emptyList();
     }
 }
