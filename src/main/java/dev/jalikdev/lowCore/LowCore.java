@@ -181,6 +181,10 @@ public class LowCore extends JavaPlugin {
         Objects.requireNonNull(getCommand("nightvision")).setExecutor(nightVisionCommand);
         getServer().getPluginManager().registerEvents(nightVisionCommand, this);
 
+        SitCommand sit = new SitCommand(this);
+        getCommand("sit").setExecutor(sit);
+        getServer().getPluginManager().registerEvents(sit, this);
+
 
         if (getConfig().getBoolean("update-checker.enabled", true)) {
             new UpdateChecker(this).checkForUpdates();

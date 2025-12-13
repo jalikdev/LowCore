@@ -131,7 +131,16 @@ feed:
     other: "&aYou fed &f%player%!"
     target: "&aYou have been fed by &f%feeder%!"
     no-permission: "&cYou don't have permission to use this command."
-    player-not-found: "&cThat player is not online."
+    no-permission-others: "&cYou don't have permission to feed others."
+
+# ======================
+# Sit
+# ======================
+sit:
+  messages:
+    down: "You have sit down"
+    up: "&eYou have stood up"
+
 
 # ======================
 # Mob Spawner

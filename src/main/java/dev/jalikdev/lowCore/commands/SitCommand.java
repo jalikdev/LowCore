@@ -1,0 +1,162 @@
+package dev.jalikdev.lowCore.commands;
+
+import dev.jalikdev.lowCore.LowCore;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.command.*;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Player;
+import org.bukkit.event.*;
+import org.bukkit.event.entity.EntityDismountEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.jetbrains.annotations.NotNull;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+public class SitCommand implements CommandExecutor, Listener {
+
+    private final Map<UUID, ArmorStand> seats = new HashMap<>();
+    private final Map<UUID, Location> seatBase = new HashMap<>();
+    private final Map<UUID, Float> lastYaw = new HashMap<>();
+
+    public SitCommand(LowCore plugin) {
+        Bukkit.getScheduler().runTaskTimer(plugin, this::tick, 1L, 1L);
+    }
+
+    private boolean isStandingOnBlock(Player player) {
+        return !player.getLocation()
+                .subtract(0, 0.1, 0)
+                .getBlock()
+                .isPassable();
+    }
+
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender,
+                             @NotNull Command command,
+                             @NotNull String label,
+                             @NotNull String[] args) {
+
+        if (!(sender instanceof Player player)) return true;
+
+        if (!isStandingOnBlock(player)) {
+            LowCore.sendMessage(sender, "&cYou must be standing!");
+            return true;
+        }
+
+        if (seats.containsKey(player.getUniqueId())) {
+            standUp(player);
+        } else {
+            sitDown(player);
+        }
+        return true;
+    }
+
+    private void sitDown(Player player) {
+        Location base = player.getLocation().clone();
+        base.setPitch(0f);
+
+        ArmorStand seat = player.getWorld().spawn(base, ArmorStand.class, s -> {
+            s.setInvisible(true);
+            s.setMarker(true);
+            s.setGravity(false);
+            s.setSmall(true);
+            s.setInvulnerable(true);
+            s.setSilent(true);
+            s.setCollidable(false);
+            s.addScoreboardTag("sit-seat");
+        });
+
+        seat.addPassenger(player);
+        seats.put(player.getUniqueId(), seat);
+        seatBase.put(player.getUniqueId(), base);
+        lastYaw.put(player.getUniqueId(), base.getYaw());
+    }
+
+    private void standUp(Player player) {
+        UUID uuid = player.getUniqueId();
+
+        ArmorStand seat = seats.remove(uuid);
+        Location base = seatBase.remove(uuid);
+        lastYaw.remove(uuid);
+
+        if (player.getVehicle() != null) player.leaveVehicle();
+        if (seat != null && !seat.isDead()) seat.remove();
+
+        if (base != null) {
+            Location tp = base.clone().add(0, 0.5, 0);
+            tp.setYaw(player.getLocation().getYaw());
+            tp.setPitch(player.getLocation().getPitch());
+            player.teleport(tp);
+        }
+    }
+
+
+    private void tick() {
+        for (Map.Entry<UUID, ArmorStand> entry : seats.entrySet()) {
+            UUID uuid = entry.getKey();
+            ArmorStand seat = entry.getValue();
+
+            Player p = Bukkit.getPlayer(uuid);
+            Location base = seatBase.get(uuid);
+
+            if (p == null || base == null || seat == null || seat.isDead()) continue;
+
+            float yaw = smoothYaw(uuid, p.getLocation().getYaw());
+
+            Location seatLoc = base.clone();
+            seatLoc.setYaw(yaw);
+            seatLoc.setPitch(0f);
+
+            seat.teleport(seatLoc);
+        }
+    }
+
+    private float smoothYaw(UUID uuid, float newYaw) {
+        Float last = lastYaw.get(uuid);
+        if (last == null) {
+            lastYaw.put(uuid, newYaw);
+            return newYaw;
+        }
+
+        float delta = newYaw - last;
+        while (delta <= -180) delta += 360;
+        while (delta > 180) delta -= 360;
+
+        float result = last + delta;
+        lastYaw.put(uuid, result);
+        return result;
+    }
+
+    @EventHandler
+    public void onDismount(EntityDismountEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+        if (!seats.containsKey(player.getUniqueId())) return;
+        standUp(player);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onDamage(EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+        if (!seats.containsKey(player.getUniqueId())) return;
+        standUp(player);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onMobDamage(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+        if (!seats.containsKey(player.getUniqueId())) return;
+
+        standUp(player);
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        if (seats.containsKey(player.getUniqueId())) standUp(player);
+    }
+}

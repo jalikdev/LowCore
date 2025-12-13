@@ -154,6 +154,11 @@ commands:
     aliases: [ nv, fullbright ]
     permission: lowcore.nightvision
 
+  sit:
+    description: Sit down / stand up
+    usage: /sit
+
+
 
 # -------------------------------------------------
 # PERMISSIONS
@@ -269,3 +274,6 @@ permissions:
   lowcore.nightvision:
     description: Allows using /nightvision
     default: op
+
+  lowcore.sit:
+    default: true
