@@ -137,17 +137,6 @@ commands:
     permission: lowcore.admin
     aliases: [ lca ]
 
-  world:
-    description: Open the world GUI
-    usage: /world
-    permission: lowcore.world
-
-  itemedit:
-    description: Edit item name, lore and sign items
-    usage: "/itemedit <name|resetname|lore|sign>"
-    permission: lowcore.itemedit
-    permission-message: "&cYou do not have permission to use this command."
-
   nightvision:
     description: Toggle hidden fullbright night vision
     usage: /nightvision
@@ -259,16 +248,6 @@ permissions:
 
   lowcore.admin:
     description: Allows using the LowCore admin/settings command
-    default: op
-
-  lowcore.world:
-    description: Allows opening the world GUI and teleporting between worlds
-    default: op
-  lowcore.world.create:
-    description: Allows creating new worlds via GUI
-    default: op
-  lowcore.world.delete:
-    description: Allows deleting worlds via GUI (shift-click)
     default: op
 
   lowcore.nightvision:
