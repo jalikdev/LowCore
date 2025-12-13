@@ -32,12 +32,12 @@ public class EcCommand implements CommandExecutor, TabCompleter, Listener {
                              @NotNull String label,
                              @NotNull String[] args) {
 
-        if (args.length == 0) {
-            if (!(sender instanceof Player player)) {
-                LowCore.sendConfigMessage(sender, "ec.console-usage");
-                return true;
-            }
+        if (!(sender instanceof Player player)) {
+            LowCore.sendConfigMessage(sender, "player-only");
+            return true;
+        }
 
+        if (args.length == 0) {
             if (!sender.hasPermission("lowcore.ec")) {
                 LowCore.sendConfigMessage(sender, "no-permission");
                 return true;
